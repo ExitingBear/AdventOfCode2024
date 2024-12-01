@@ -1,0 +1,58 @@
+---
+title: "Day 1 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day1Sample.txt")
+
+```
+
+## Part 1
+Pretty much exactly as described:
+* split into a left & right list
+
+```{r}
+leftlist<-c()
+rightlist<-c()
+ 
+for (i in 1:length(input)){
+  x<-as.numeric(unlist(str_split(str_squish(input[i])," ")))
+  leftlist<-c(leftlist,x[1])
+  rightlist<-c(rightlist,x[2])}
+```
+
+* find the distances between the sorted lists
+
+```{r}
+listdiffs<-abs(sort(leftlist)-sort(rightlist))
+part1<-sum(listdiffs)
+part1
+```
+## Part 2
+
+For each number in the left list, find how many time it shows up in the right list.  Then return the product of the appearances and the number
+
+```{r}
+similarity_score<-sapply(leftlist, function(x){
+  appears<-sum(rightlist==x)
+  appears*x})
+```
+
+Then sum them all for the score
+
+```{r}
+part2<-sum(similarity_score)
+part2
+```
