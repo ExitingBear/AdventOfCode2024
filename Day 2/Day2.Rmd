@@ -1,0 +1,66 @@
+---
+title: "Day 2 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day2Sample.txt")
+
+reports<-list()
+for (i in 1:length(input)){
+  reports<-c(reports,list(as.numeric(unlist(str_split(input[i]," ")))))}
+```
+## Part 1
+
+Uses diff() to see the difference between the elements in the vector.  Then checks to see if they're all either between 1 & 3 or -1 & -3
+```{r}
+issafe<-function(rprt){
+  d<-diff(rprt)
+  if((all(d>=1)&&all(d<=3))||(all(d<=-1)&&all(d>=-3))){
+    d<-TRUE}else{d<-FALSE}
+  d}
+```
+
+counts the number of vectors that are safe
+
+```{r}
+part1<-sum(sapply(reports,issafe))
+part1
+```
+## Part 2
+
+check with the problem dampener
+
+```{r}
+probdamp<-function(rpt){
+  ### if it is safe, return TRUE
+  if(issafe(rpt)){return(TRUE)}
+  ### otherwise, set to false
+  pd<-FALSE
+  i<-1
+  ### cycle through removing level one at a time
+  ### stop as soon as either a level is removed that makes the report safe
+  ### or there aren't any left to try to remove
+  while(!pd&&i<=length(rpt)){
+    pd<-issafe(rpt[-i])
+  i<-i+1}
+  return(pd)}
+```
+
+
+```{r}
+part2<-sum(sapply(reports,probdamp))
+part2
+```
+
