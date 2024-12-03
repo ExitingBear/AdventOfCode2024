@@ -11,7 +11,7 @@
 
 
 
-<title>Day 2 Notebook</title>
+<title>Day 3 Notebook</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1746,7 +1746,7 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Day 2 Notebook</h1>
+<h1 class="title toc-ignore">Day 3 Notebook</h1>
 
 </div>
 
@@ -1756,97 +1756,99 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVhVzV3ZFhROExYSmxZV1JmYkdsdVpYTW9YQ0pFWVhreVUyRnRjR3hsTG5SNGRGd2lLVnh1WEc1Y2JpTWpJeU1nVDNKcFoybHVZV3hjYmlOeVpYQnZjblJ6UEMxc2FYTjBLQ2xjYmlObWIzSWdLR2tnYVc0Z01UcHNaVzVuZEdnb2FXNXdkWFFwS1h0Y2JpTWdJSEpsY0c5eWRITThMV01vY21Wd2IzSjBjeXhzYVhOMEtHRnpMbTUxYldWeWFXTW9kVzVzYVhOMEtITjBjbDl6Y0d4cGRDaHBibkIxZEZ0cFhTeGNJaUJjSWlrcEtTa3BmVnh1SXlNaklGVndaR0YwWldRZ1lXWjBaWElnYjI1c2FXNWxJR2hsYkhBdmMzVm5aMlZ6ZEdsdmJseHVYRzV5WlhCdmNuUnpQQzFzWVhCd2JIa29jM1J5WDNOd2JHbDBLR2x1Y0hWMExDQmNJaUJjSWlrc1lYTXViblZ0WlhKcFl5bGNibHh1WUdCZ0luMD0gLS0+XG5cbmBgYHJcbmlucHV0PC1yZWFkX2xpbmVzKFwiRGF5MlNhbXBsZS50eHRcIilcblxuXG4jIyMjIE9yaWdpbmFsXG4jcmVwb3J0czwtbGlzdCgpXG4jZm9yIChpIGluIDE6bGVuZ3RoKGlucHV0KSl7XG4jICByZXBvcnRzPC1jKHJlcG9ydHMsbGlzdChhcy5udW1lcmljKHVubGlzdChzdHJfc3BsaXQoaW5wdXRbaV0sXCIgXCIpKSkpKX1cbiMjIyBVcGRhdGVkIGFmdGVyIG9ubGluZSBoZWxwL3N1Z2dlc3Rpb25cblxucmVwb3J0czwtbGFwcGx5KHN0cl9zcGxpdChpbnB1dCwgXCIgXCIpLGFzLm51bWVyaWMpXG5cbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5wdXQ8LXJlYWRfbGluZXMoXCJEYXkyU2FtcGxlLnR4dFwiKVxuXG5cbiMjIyMgT3JpZ2luYWxcbiNyZXBvcnRzPC1saXN0KClcbiNmb3IgKGkgaW4gMTpsZW5ndGgoaW5wdXQpKXtcbiMgIHJlcG9ydHM8LWMocmVwb3J0cyxsaXN0KGFzLm51bWVyaWModW5saXN0KHN0cl9zcGxpdChpbnB1dFtpXSxcIiBcIikpKSkpfVxuIyMjIFVwZGF0ZWQgYWZ0ZXIgb25saW5lIGhlbHAvc3VnZ2VzdGlvblxuXG5yZXBvcnRzPC1sYXBwbHkoc3RyX3NwbGl0KGlucHV0LCBcIiBcIiksYXMubnVtZXJpYylcblxuYGBgIn0= -->
-<pre class="r"><code>input&lt;-read_lines(&quot;Day2Sample.txt&quot;)
-
-
-#### Original
-#reports&lt;-list()
-#for (i in 1:length(input)){
-#  reports&lt;-c(reports,list(as.numeric(unlist(str_split(input[i],&quot; &quot;)))))}
-### Updated after online help/suggestion
-
-reports&lt;-lapply(str_split(input, &quot; &quot;),as.numeric)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiaW5wdXQ8LVwieG11bCgyLDQpJSZtdWxbMyw3XSFAXmRvX25vdF9tdWwoNSw1KSttdWwoMzIsNjRddGhlbihtdWwoMTEsOCltdWwoOCw1KSlcIiJ9 -->
+<pre class="r"><code>input&lt;-&quot;xmul(2,4)%&amp;mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))&quot;</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<div id="part-1" class="section level2">
-<h2>Part 1</h2>
-<p>Uses diff() to see the difference between the elements in the vector.
-Then checks to see if they’re all either between 1 &amp; 3 or -1 &amp;
--3</p>
+<p>##Part 1</p>
+<p>First, concatenate the input</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVhWE56WVdabFBDMW1kVzVqZEdsdmJpaHljSEowS1h0Y2JpQWdaRHd0WkdsbVppaHljSEowS1Z4dUlDQnBaaWdvWVd4c0tHUStQVEVwSmlaaGJHd29aRHc5TXlrcGZId29ZV3hzS0dROFBTMHhLU1ltWVd4c0tHUStQUzB6S1NrcGUxeHVJQ0FnSUdROExWUlNWVVY5Wld4elpYdGtQQzFHUVV4VFJYMWNiaUFnWkgxY2JtQmdZQ0o5IC0tPlxuXG5gYGByXG5pc3NhZmU8LWZ1bmN0aW9uKHJwcnQpe1xuICBkPC1kaWZmKHJwcnQpXG4gIGlmKChhbGwoZD49MSkmJmFsbChkPD0zKSl8fChhbGwoZDw9LTEpJiZhbGwoZD49LTMpKSl7XG4gICAgZDwtVFJVRX1lbHNle2Q8LUZBTFNFfVxuICBkfVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXNzYWZlPC1mdW5jdGlvbihycHJ0KXtcbiAgZDwtZGlmZihycHJ0KVxuICBpZigoYWxsKGQ+PTEpJiZhbGwoZDw9MykpfHwoYWxsKGQ8PS0xKSYmYWxsKGQ+PS0zKSkpe1xuICAgIGQ8LVRSVUV9ZWxzZXtkPC1GQUxTRX1cbiAgZH1cbmBgYCJ9 -->
-<pre class="r"><code>issafe&lt;-function(rprt){
-  d&lt;-diff(rprt)
-  if((all(d&gt;=1)&amp;&amp;all(d&lt;=3))||(all(d&lt;=-1)&amp;&amp;all(d&gt;=-3))){
-    d&lt;-TRUE}else{d&lt;-FALSE}
-  d}</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiY29ycnVwdGVkbWVtb3J5PC1zdHJfZmxhdHRlbihpbnB1dCkifQ== -->
+<pre class="r"><code>corruptedmemory&lt;-str_flatten(input)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>counts the number of vectors that are safe</p>
+<p>Start by finding all of the instructions</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjR0Z5ZERFOExYTjFiU2h6WVhCd2JIa29jbVZ3YjNKMGN5eHBjM05oWm1VcEtWeHVjR0Z5ZERGY2JtQmdZQ0o5IC0tPlxuXG5gYGByXG5wYXJ0MTwtc3VtKHNhcHBseShyZXBvcnRzLGlzc2FmZSkpXG5wYXJ0MVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydDE8LXN1bShzYXBwbHkocmVwb3J0cyxpc3NhZmUpKVxucGFydDFcbmBgYCJ9 -->
-<pre class="r"><code>part1&lt;-sum(sapply(reports,issafe))
+<!-- rnb-source-begin eyJkYXRhIjoibXVsdF9zb21lX251bXM8LWZ1bmN0aW9uKHMpe1xuICAjIyMgZmluZCBhbGwgb2YgdGhlIGluc3RydWN0aW9uc1xuICBpbnN0czwtdW5saXN0KHN0cl9leHRyYWN0X2FsbChzLFwibXVsXFxcXChcXFxcZHsxLDN9XFxcXCxcXFxcZHsxLDN9XFxcXClcIikpXG4gICMjIyByZW1vdmUgdGhlIFwibXVsKFwiIGFuZCBcIilcIiBmcm9tIHRoZSBzdHJpbmdzXG4gIGluc3RzPC1zdHJfc3ViKGluc3RzLHN0YXJ0PTUsZW5kPS0yKVxuICAjIyMgY2hhbmdlIHRoZXNlIHRvIG51bWJlcnMgYW5kIG11bHRpcGx5IHRoZW1cbiAgaW5zdHM8LXNhcHBseShpbnN0cyxmdW5jdGlvbih4KXtcbiAgICBwcm9kKHNhcHBseShzdHJfc3BsaXQoeCxcIixcIiksYXMubnVtZXJpYykpfSlcbnN1bShpbnN0cyl9In0= -->
+<pre class="r"><code>mult_some_nums&lt;-function(s){
+  ### find all of the instructions
+  insts&lt;-unlist(str_extract_all(s,&quot;mul\\(\\d{1,3}\\,\\d{1,3}\\)&quot;))
+  ### remove the &quot;mul(&quot; and &quot;)&quot; from the strings
+  insts&lt;-str_sub(insts,start=5,end=-2)
+  ### change these to numbers and multiply them
+  insts&lt;-sapply(insts,function(x){
+    prod(sapply(str_split(x,&quot;,&quot;),as.numeric))})
+sum(insts)}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjpbInBhcnQxPC1tdWx0X3NvbWVfbnVtcyhjb3JydXB0ZWRtZW1vcnkpIiwicGFydDEiXX0= -->
+<pre class="r"><code>part1&lt;-mult_some_nums(corruptedmemory)
 part1</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDJcbiJ9 -->
-<pre><code>[1] 2</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE2MVxuIn0= -->
+<pre><code>[1] 161</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
 <div id="part-2" class="section level2">
 <h2>Part 2</h2>
-<p>check with the problem dampener</p>
+<p>Updating the input for the second sample</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjSEp2WW1SaGJYQThMV1oxYm1OMGFXOXVLSEp3ZENsN1hHNGdJQ01qSXlCcFppQnBkQ0JwY3lCellXWmxMQ0J5WlhSMWNtNGdWRkpWUlZ4dUlDQnBaaWhwYzNOaFptVW9jbkIwS1NsN2NtVjBkWEp1S0ZSU1ZVVXBmVnh1SUNBakl5TWdiM1JvWlhKM2FYTmxMQ0J6WlhRZ2RHOGdabUZzYzJWY2JpQWdjR1E4TFVaQlRGTkZYRzRnSUdrOExURmNiaUFnSXlNaklHTjVZMnhsSUhSb2NtOTFaMmdnY21WdGIzWnBibWNnYkdWMlpXd2diMjVsSUdGMElHRWdkR2x0WlZ4dUlDQWpJeU1nYzNSdmNDQmhjeUJ6YjI5dUlHRnpJR1ZwZEdobGNpQmhJR3hsZG1Wc0lHbHpJSEpsYlc5MlpXUWdkR2hoZENCdFlXdGxjeUIwYUdVZ2NtVndiM0owSUhOaFptVmNiaUFnSXlNaklHOXlJSFJvWlhKbElHRnlaVzRuZENCaGJua2diR1ZtZENCMGJ5QjBjbmtnZEc4Z2NtVnRiM1psWEc0Z0lIZG9hV3hsS0NGd1pDWW1hVHc5YkdWdVozUm9LSEp3ZENrcGUxeHVJQ0FnSUhCa1BDMXBjM05oWm1Vb2NuQjBXeTFwWFNsY2JpQWdhVHd0YVNzeGZWeHVJQ0J5WlhSMWNtNG9jR1FwZlZ4dVlHQmdJbjA9IC0tPlxuXG5gYGByXG5wcm9iZGFtcDwtZnVuY3Rpb24ocnB0KXtcbiAgIyMjIGlmIGl0IGlzIHNhZmUsIHJldHVybiBUUlVFXG4gIGlmKGlzc2FmZShycHQpKXtyZXR1cm4oVFJVRSl9XG4gICMjIyBvdGhlcndpc2UsIHNldCB0byBmYWxzZVxuICBwZDwtRkFMU0VcbiAgaTwtMVxuICAjIyMgY3ljbGUgdGhyb3VnaCByZW1vdmluZyBsZXZlbCBvbmUgYXQgYSB0aW1lXG4gICMjIyBzdG9wIGFzIHNvb24gYXMgZWl0aGVyIGEgbGV2ZWwgaXMgcmVtb3ZlZCB0aGF0IG1ha2VzIHRoZSByZXBvcnQgc2FmZVxuICAjIyMgb3IgdGhlcmUgYXJlbid0IGFueSBsZWZ0IHRvIHRyeSB0byByZW1vdmVcbiAgd2hpbGUoIXBkJiZpPD1sZW5ndGgocnB0KSl7XG4gICAgcGQ8LWlzc2FmZShycHRbLWldKVxuICBpPC1pKzF9XG4gIHJldHVybihwZCl9XG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvYmRhbXA8LWZ1bmN0aW9uKHJwdCl7XG4gICMjIyBpZiBpdCBpcyBzYWZlLCByZXR1cm4gVFJVRVxuICBpZihpc3NhZmUocnB0KSl7cmV0dXJuKFRSVUUpfVxuICAjIyMgb3RoZXJ3aXNlLCBzZXQgdG8gZmFsc2VcbiAgcGQ8LUZBTFNFXG4gIGk8LTFcbiAgIyMjIGN5Y2xlIHRocm91Z2ggcmVtb3ZpbmcgbGV2ZWwgb25lIGF0IGEgdGltZVxuICAjIyMgc3RvcCBhcyBzb29uIGFzIGVpdGhlciBhIGxldmVsIGlzIHJlbW92ZWQgdGhhdCBtYWtlcyB0aGUgcmVwb3J0IHNhZmVcbiAgIyMjIG9yIHRoZXJlIGFyZW4ndCBhbnkgbGVmdCB0byB0cnkgdG8gcmVtb3ZlXG4gIHdoaWxlKCFwZCYmaTw9bGVuZ3RoKHJwdCkpe1xuICAgIHBkPC1pc3NhZmUocnB0Wy1pXSlcbiAgaTwtaSsxfVxuICByZXR1cm4ocGQpfVxuYGBgIn0= -->
-<pre class="r"><code>probdamp&lt;-function(rpt){
-  ### if it is safe, return TRUE
-  if(issafe(rpt)){return(TRUE)}
-  ### otherwise, set to false
-  pd&lt;-FALSE
-  i&lt;-1
-  ### cycle through removing level one at a time
-  ### stop as soon as either a level is removed that makes the report safe
-  ### or there aren&#39;t any left to try to remove
-  while(!pd&amp;&amp;i&lt;=length(rpt)){
-    pd&lt;-issafe(rpt[-i])
-  i&lt;-i+1}
-  return(pd)}</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjpbImlucHV0PC1cInhtdWwoMiw0KSZtdWxbMyw3XSFeZG9uJ3QoKV9tdWwoNSw1KSttdWwoMzIsNjRdKG11bCgxMSw4KXVuZG8oKT9tdWwoOCw1KSlcIiIsImNvcnJ1cHRlZG1lbW9yeTwtc3RyX2ZsYXR0ZW4oaW5wdXQpIl19 -->
+<pre class="r"><code>input&lt;-&quot;xmul(2,4)&amp;mul[3,7]!^don&#39;t()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))&quot;
+corruptedmemory&lt;-str_flatten(input)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>For part 2, split the corrupted memory into several substrings that
+begin with “do()” &amp; end with “don’t()” Then, for each of those, run
+mult_some_nums() and add the results all together.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiZG9hbmRkb250PC1mdW5jdGlvbihzKXtcbiAgI3N0YXJ0IGJ5IGFwcGVuZGluZyBkbyBvciBkb24ndCB0byB0aGUgYmVnaW5uaW5nICYgZW5kIG9mIHRoZSBzdHJpbmdcbiAgczwtc3RyX2MoXCJkbygpXCIscyxcImRvbid0KClcIilcbiAgdG90YWxtdWx0PC0wXG4gICMjIyB3aGlsZSB0aGVyZSBpcyBzdGlsbCBhIFwiZG8oKVwiXG4gIGtlZXBnb2luZzwtVFJVRVxuICB3aGlsZShrZWVwZ29pbmcpe1xuICAgICMjIGZpbmQgdGhlIGZpcnN0IFwiZG9uJ3QoKVwiIGFuZCBjdXQgb2ZmIGF0IHRoYXQgcG9pbnRcbiAgICBlbmFibGVkPC1zdHJfc3ViKHMsZW5kPXN0cl9sb2NhdGUocyxcImRvblxcXFwndFxcXFwoXFxcXClcIilbMl0pXG4gICAgIyMgYWRkIHRoZSBtdWx0aXBsaWVkIG51bWJlcnMgZm9yIHRoYXQgc2VjdGlvblxuICAgIHRvdGFsbXVsdDwtdG90YWxtdWx0K211bHRfc29tZV9udW1zKGVuYWJsZWQpXG4gICAgIyMgdXBkYXRlIHMgdG8gc3RhcnQgYWZ0ZXIgdGhlIGZpcnN0IFwiZG9uJ3QoKVwiXG4gICAgczwtc3RyX3N1YihzLHN0YXJ0PXN0cl9sb2NhdGUocyxcImRvblxcXFwndFxcXFwoXFxcXClcIilbMl0rMSlcbiAgICAjIyBpZiB0aGVyZSdzIGEgXCJkbygpXCIsIHVwZGF0ZSBzIHRvIHN0YXJ0IHRoZXJlXG4gICAgaWYgKHN0cl9kZXRlY3QocyxcImRvXFxcXChcXFxcKVwiKSl7XG4gICAgICBzPC1zdHJfc3ViKHMsc3RhcnQ9c3RyX2xvY2F0ZShzLFwiZG9cXFxcKFxcXFwpXCIpWzFdKVxuICAgICAgIyMgb3RoZXJ3aXNlLCBzdG9wXG4gICAgICB9ZWxzZXtrZWVwZ29pbmc8LUZBTFNFfX1cbiAgdG90YWxtdWx0fSJ9 -->
+<pre class="r"><code>doanddont&lt;-function(s){
+  #start by appending do or don&#39;t to the beginning &amp; end of the string
+  s&lt;-str_c(&quot;do()&quot;,s,&quot;don&#39;t()&quot;)
+  totalmult&lt;-0
+  ### while there is still a &quot;do()&quot;
+  keepgoing&lt;-TRUE
+  while(keepgoing){
+    ## find the first &quot;don&#39;t()&quot; and cut off at that point
+    enabled&lt;-str_sub(s,end=str_locate(s,&quot;don\\&#39;t\\(\\)&quot;)[2])
+    ## add the multiplied numbers for that section
+    totalmult&lt;-totalmult+mult_some_nums(enabled)
+    ## update s to start after the first &quot;don&#39;t()&quot;
+    s&lt;-str_sub(s,start=str_locate(s,&quot;don\\&#39;t\\(\\)&quot;)[2]+1)
+    ## if there&#39;s a &quot;do()&quot;, update s to start there
+    if (str_detect(s,&quot;do\\(\\)&quot;)){
+      s&lt;-str_sub(s,start=str_locate(s,&quot;do\\(\\)&quot;)[1])
+      ## otherwise, stop
+      }else{keepgoing&lt;-FALSE}}
+  totalmult}</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjR0Z5ZERJOExYTjFiU2h6WVhCd2JIa29jbVZ3YjNKMGN5eHdjbTlpWkdGdGNDa3BYRzV3WVhKME1seHVZR0JnSW4wPSAtLT5cblxuYGBgclxucGFydDI8LXN1bShzYXBwbHkocmVwb3J0cyxwcm9iZGFtcCkpXG5wYXJ0MlxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydDI8LXN1bShzYXBwbHkocmVwb3J0cyxwcm9iZGFtcCkpXG5wYXJ0MlxuYGBgIn0= -->
-<pre class="r"><code>part2&lt;-sum(sapply(reports,probdamp))
+<!-- rnb-source-begin eyJkYXRhIjpbInBhcnQyPC1kb2FuZGRvbnQoY29ycnVwdGVkbWVtb3J5KSIsInBhcnQyIl19 -->
+<pre class="r"><code>part2&lt;-doanddont(corruptedmemory)
 part2</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDRcbiJ9 -->
-<pre><code>[1] 4</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDQ4XG4ifQ== -->
+<pre><code>[1] 48</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRheSAyIE5vdGVib29rIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQpsaWJyYXJ5KHJlc2hhcGUyKQ0KbGlicmFyeShrbml0cikNCmxpYnJhcnkoZHBseXIpDQpsaWJyYXJ5KHN0cmluZ3IpDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkocmVhZHIpDQpsaWJyYXJ5KGNvbGxlY3Rpb25zKQ0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpDQpgYGANCg0KYGBge3J9DQppbnB1dDwtcmVhZF9saW5lcygiRGF5MlNhbXBsZS50eHQiKQ0KDQoNCiMjIyMgT3JpZ2luYWwNCiNyZXBvcnRzPC1saXN0KCkNCiNmb3IgKGkgaW4gMTpsZW5ndGgoaW5wdXQpKXsNCiMgIHJlcG9ydHM8LWMocmVwb3J0cyxsaXN0KGFzLm51bWVyaWModW5saXN0KHN0cl9zcGxpdChpbnB1dFtpXSwiICIpKSkpKX0NCiMjIyBVcGRhdGVkIGFmdGVyIG9ubGluZSBoZWxwL3N1Z2dlc3Rpb24NCg0KcmVwb3J0czwtbGFwcGx5KHN0cl9zcGxpdChpbnB1dCwgIiAiKSxhcy5udW1lcmljKQ0KDQpgYGANCiMjIFBhcnQgMQ0KDQpVc2VzIGRpZmYoKSB0byBzZWUgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgZWxlbWVudHMgaW4gdGhlIHZlY3Rvci4gIFRoZW4gY2hlY2tzIHRvIHNlZSBpZiB0aGV5J3JlIGFsbCBlaXRoZXIgYmV0d2VlbiAxICYgMyBvciAtMSAmIC0zDQpgYGB7cn0NCmlzc2FmZTwtZnVuY3Rpb24ocnBydCl7DQogIGQ8LWRpZmYocnBydCkNCiAgaWYoKGFsbChkPj0xKSYmYWxsKGQ8PTMpKXx8KGFsbChkPD0tMSkmJmFsbChkPj0tMykpKXsNCiAgICBkPC1UUlVFfWVsc2V7ZDwtRkFMU0V9DQogIGR9DQpgYGANCg0KY291bnRzIHRoZSBudW1iZXIgb2YgdmVjdG9ycyB0aGF0IGFyZSBzYWZlDQoNCmBgYHtyfQ0KcGFydDE8LXN1bShzYXBwbHkocmVwb3J0cyxpc3NhZmUpKQ0KcGFydDENCmBgYA0KIyMgUGFydCAyDQoNCmNoZWNrIHdpdGggdGhlIHByb2JsZW0gZGFtcGVuZXINCg0KYGBge3J9DQpwcm9iZGFtcDwtZnVuY3Rpb24ocnB0KXsNCiAgIyMjIGlmIGl0IGlzIHNhZmUsIHJldHVybiBUUlVFDQogIGlmKGlzc2FmZShycHQpKXtyZXR1cm4oVFJVRSl9DQogICMjIyBvdGhlcndpc2UsIHNldCB0byBmYWxzZQ0KICBwZDwtRkFMU0UNCiAgaTwtMQ0KICAjIyMgY3ljbGUgdGhyb3VnaCByZW1vdmluZyBsZXZlbCBvbmUgYXQgYSB0aW1lDQogICMjIyBzdG9wIGFzIHNvb24gYXMgZWl0aGVyIGEgbGV2ZWwgaXMgcmVtb3ZlZCB0aGF0IG1ha2VzIHRoZSByZXBvcnQgc2FmZQ0KICAjIyMgb3IgdGhlcmUgYXJlbid0IGFueSBsZWZ0IHRvIHRyeSB0byByZW1vdmUNCiAgd2hpbGUoIXBkJiZpPD1sZW5ndGgocnB0KSl7DQogICAgcGQ8LWlzc2FmZShycHRbLWldKQ0KICBpPC1pKzF9DQogIHJldHVybihwZCl9DQpgYGANCg0KDQpgYGB7cn0NCnBhcnQyPC1zdW0oc2FwcGx5KHJlcG9ydHMscHJvYmRhbXApKQ0KcGFydDINCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRheSAzIE5vdGVib29rIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQpsaWJyYXJ5KHJlc2hhcGUyKQ0KbGlicmFyeShrbml0cikNCmxpYnJhcnkoZHBseXIpDQpsaWJyYXJ5KHN0cmluZ3IpDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkocmVhZHIpDQpsaWJyYXJ5KGNvbGxlY3Rpb25zKQ0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpDQpgYGANCg0KYGBge3J9DQppbnB1dDwtInhtdWwoMiw0KSUmbXVsWzMsN10hQF5kb19ub3RfbXVsKDUsNSkrbXVsKDMyLDY0XXRoZW4obXVsKDExLDgpbXVsKDgsNSkpIg0KYGBgDQoNCiMjUGFydCAxDQoNCkZpcnN0LCBjb25jYXRlbmF0ZSB0aGUgaW5wdXQNCmBgYHtyfQ0KY29ycnVwdGVkbWVtb3J5PC1zdHJfZmxhdHRlbihpbnB1dCkNCmBgYA0KDQoNClN0YXJ0IGJ5IGZpbmRpbmcgYWxsIG9mIHRoZSBpbnN0cnVjdGlvbnMNCmBgYHtyfQ0KbXVsdF9zb21lX251bXM8LWZ1bmN0aW9uKHMpew0KICAjIyMgZmluZCBhbGwgb2YgdGhlIGluc3RydWN0aW9ucw0KICBpbnN0czwtdW5saXN0KHN0cl9leHRyYWN0X2FsbChzLCJtdWxcXChcXGR7MSwzfVxcLFxcZHsxLDN9XFwpIikpDQogICMjIyByZW1vdmUgdGhlICJtdWwoIiBhbmQgIikiIGZyb20gdGhlIHN0cmluZ3MNCiAgaW5zdHM8LXN0cl9zdWIoaW5zdHMsc3RhcnQ9NSxlbmQ9LTIpDQogICMjIyBjaGFuZ2UgdGhlc2UgdG8gbnVtYmVycyBhbmQgbXVsdGlwbHkgdGhlbQ0KICBpbnN0czwtc2FwcGx5KGluc3RzLGZ1bmN0aW9uKHgpew0KICAgIHByb2Qoc2FwcGx5KHN0cl9zcGxpdCh4LCIsIiksYXMubnVtZXJpYykpfSkNCnN1bShpbnN0cyl9DQoNCmBgYA0KDQoNCmBgYHtyfQ0KcGFydDE8LW11bHRfc29tZV9udW1zKGNvcnJ1cHRlZG1lbW9yeSkNCnBhcnQxDQpgYGANCiMjIFBhcnQgMg0KDQpVcGRhdGluZyB0aGUgaW5wdXQgZm9yIHRoZSBzZWNvbmQgc2FtcGxlDQpgYGB7cn0NCmlucHV0PC0ieG11bCgyLDQpJm11bFszLDddIV5kb24ndCgpX211bCg1LDUpK211bCgzMiw2NF0obXVsKDExLDgpdW5kbygpP211bCg4LDUpKSINCmNvcnJ1cHRlZG1lbW9yeTwtc3RyX2ZsYXR0ZW4oaW5wdXQpDQpgYGANCg0KRm9yIHBhcnQgMiwgc3BsaXQgdGhlIGNvcnJ1cHRlZCBtZW1vcnkgaW50byBzZXZlcmFsIHN1YnN0cmluZ3MgdGhhdCBiZWdpbiB3aXRoICJkbygpIiAmIGVuZCB3aXRoICJkb24ndCgpIg0KVGhlbiwgZm9yIGVhY2ggb2YgdGhvc2UsIHJ1biBtdWx0X3NvbWVfbnVtcygpIGFuZCBhZGQgdGhlIHJlc3VsdHMgYWxsIHRvZ2V0aGVyLg0KDQpgYGB7cn0NCmRvYW5kZG9udDwtZnVuY3Rpb24ocyl7DQogICNzdGFydCBieSBhcHBlbmRpbmcgZG8gb3IgZG9uJ3QgdG8gdGhlIGJlZ2lubmluZyAmIGVuZCBvZiB0aGUgc3RyaW5nDQogIHM8LXN0cl9jKCJkbygpIixzLCJkb24ndCgpIikNCiAgdG90YWxtdWx0PC0wDQogICMjIyB3aGlsZSB0aGVyZSBpcyBzdGlsbCBhICJkbygpIg0KICBrZWVwZ29pbmc8LVRSVUUNCiAgd2hpbGUoa2VlcGdvaW5nKXsNCiAgICAjIyBmaW5kIHRoZSBmaXJzdCAiZG9uJ3QoKSIgYW5kIGN1dCBvZmYgYXQgdGhhdCBwb2ludA0KICAgIGVuYWJsZWQ8LXN0cl9zdWIocyxlbmQ9c3RyX2xvY2F0ZShzLCJkb25cXCd0XFwoXFwpIilbMl0pDQogICAgIyMgYWRkIHRoZSBtdWx0aXBsaWVkIG51bWJlcnMgZm9yIHRoYXQgc2VjdGlvbg0KICAgIHRvdGFsbXVsdDwtdG90YWxtdWx0K211bHRfc29tZV9udW1zKGVuYWJsZWQpDQogICAgIyMgdXBkYXRlIHMgdG8gc3RhcnQgYWZ0ZXIgdGhlIGZpcnN0ICJkb24ndCgpIg0KICAgIHM8LXN0cl9zdWIocyxzdGFydD1zdHJfbG9jYXRlKHMsImRvblxcJ3RcXChcXCkiKVsyXSsxKQ0KICAgICMjIGlmIHRoZXJlJ3MgYSAiZG8oKSIsIHVwZGF0ZSBzIHRvIHN0YXJ0IHRoZXJlDQogICAgaWYgKHN0cl9kZXRlY3QocywiZG9cXChcXCkiKSl7DQogICAgICBzPC1zdHJfc3ViKHMsc3RhcnQ9c3RyX2xvY2F0ZShzLCJkb1xcKFxcKSIpWzFdKQ0KICAgICAgIyMgb3RoZXJ3aXNlLCBzdG9wDQogICAgICB9ZWxzZXtrZWVwZ29pbmc8LUZBTFNFfX0NCiAgdG90YWxtdWx0fQ0KYGBgDQoNCmBgYHtyfQ0KcGFydDI8LWRvYW5kZG9udChjb3JydXB0ZWRtZW1vcnkpDQpwYXJ0Mg0KYGBgDQo=</div>
 
 
 
@@ -1893,7 +1895,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Day2.Rmd");
+  window.initializeSourceEmbed("Day3.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

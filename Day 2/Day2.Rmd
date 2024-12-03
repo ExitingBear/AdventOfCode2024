@@ -17,9 +17,15 @@ options(scipen = 999)
 ```{r}
 input<-read_lines("Day2Sample.txt")
 
-reports<-list()
-for (i in 1:length(input)){
-  reports<-c(reports,list(as.numeric(unlist(str_split(input[i]," ")))))}
+
+#### Original
+#reports<-list()
+#for (i in 1:length(input)){
+#  reports<-c(reports,list(as.numeric(unlist(str_split(input[i]," ")))))}
+### Updated after online help/suggestion
+
+reports<-lapply(str_split(input, " "),as.numeric)
+
 ```
 ## Part 1
 

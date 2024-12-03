@@ -1,0 +1,84 @@
+---
+title: "Day 3 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-"xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
+```
+
+##Part 1
+
+First, concatenate the input
+```{r}
+corruptedmemory<-str_flatten(input)
+```
+
+
+Start by finding all of the instructions
+```{r}
+mult_some_nums<-function(s){
+  ### find all of the instructions
+  insts<-unlist(str_extract_all(s,"mul\\(\\d{1,3}\\,\\d{1,3}\\)"))
+  ### remove the "mul(" and ")" from the strings
+  insts<-str_sub(insts,start=5,end=-2)
+  ### change these to numbers and multiply them
+  insts<-sapply(insts,function(x){
+    prod(sapply(str_split(x,","),as.numeric))})
+sum(insts)}
+
+```
+
+
+```{r}
+part1<-mult_some_nums(corruptedmemory)
+part1
+```
+## Part 2
+
+Updating the input for the second sample
+```{r}
+input<-"xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+corruptedmemory<-str_flatten(input)
+```
+
+For part 2, split the corrupted memory into several substrings that begin with "do()" & end with "don't()"
+Then, for each of those, run mult_some_nums() and add the results all together.
+
+```{r}
+doanddont<-function(s){
+  #start by appending do or don't to the beginning & end of the string
+  s<-str_c("do()",s,"don't()")
+  totalmult<-0
+  ### while there is still a "do()"
+  keepgoing<-TRUE
+  while(keepgoing){
+    ## find the first "don't()" and cut off at that point
+    enabled<-str_sub(s,end=str_locate(s,"don\\'t\\(\\)")[2])
+    ## add the multiplied numbers for that section
+    totalmult<-totalmult+mult_some_nums(enabled)
+    ## update s to start after the first "don't()"
+    s<-str_sub(s,start=str_locate(s,"don\\'t\\(\\)")[2]+1)
+    ## if there's a "do()", update s to start there
+    if (str_detect(s,"do\\(\\)")){
+      s<-str_sub(s,start=str_locate(s,"do\\(\\)")[1])
+      ## otherwise, stop
+      }else{keepgoing<-FALSE}}
+  totalmult}
+```
+
+```{r}
+part2<-doanddont(corruptedmemory)
+part2
+```
