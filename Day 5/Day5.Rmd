@@ -1,0 +1,118 @@
+---
+title: "Day 5 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day5Sample.txt")
+```
+
+## Part 1
+
+```{r}
+### use a dictionary for the page ordering rules.
+### The key is the page; the values are any/all pages needed before
+pagerules<-dict()
+r<-lapply(str_split(input[1:(which(input=="")-1)], "\\|"),as.numeric)
+for(i in 1:length(r)){
+  pagerules$set(r[[i]][2],c(pagerules$get(r[[i]][2],default=c()),r[[i]][1]))}
+
+## updts is the potential updates
+updts<-lapply(str_split(input[(which(input=="")+1):length(input)], ","),as.numeric)
+```
+
+Takes in the page rules & a potential update - returns the middle value if it is a valid update and 0 if not.
+```{r}
+rightorder<-function(pgruls, u){
+  ### create vector of already printed pages
+  alreadyprinted<-c()
+  ### the value for the middle page
+  midvalue<-u[((1+length(u))/2)]
+  ### go through each page and see if all of the pages needed have been printed
+  i<-1
+  while(midvalue!=0&&i<=length(u)){
+    pg<-u[i]
+    ### if there are pages that need to come before this, check them 
+    if(pgruls$has(pg)){
+      ### chk is the list of everything that needs to come before
+      chk<-pgruls$get(pg)
+      ### if anything in chk is in u, but hasn't already been printed,
+      ### set midvalue to 0
+      for(j in 1:length(chk)){
+        if ((chk[j] %in% u)&&!(chk[j] %in% alreadyprinted)){
+          midvalue<-0
+          break}}}
+  alreadyprinted<-c(alreadyprinted,pg)
+  i<-i+1}
+midvalue}
+
+```
+
+
+```{r}
+part1<-sum(sapply(updts,function(x){rightorder(pagerules,x)}))
+part1
+```
+## Part 2
+
+First, remove the updates that are in the right order
+
+```{r}
+outoforder<-updts[which(sapply(updts,function(x){rightorder(pagerules,x)})==0)]
+```
+
+This should take in an out of order update and fix the order
+
+```{r}
+fixorder<-function(pgruls, u){
+  reupdate<-c()
+  ### while there are still 
+  while(length(u)>0){
+    ## pg = the first element
+    pg<-u[1]
+    ## remove that from u
+    u<-u[-1]
+    ### if there is a rule about that page
+    if(pgruls$has(pg)){
+      ### chk are the the pages that need to come first
+      chk<-pgruls$get(pg)
+      ### find out if anything in chk is still in u
+      if (any(u %in% chk)){
+        ### if so find put the page after everything it needs to be after
+        l<-max(which(u%in%chk))
+        u<-append(u,pg,after=l)
+        ###if not, add pg to reupdate
+      }else{reupdate<-c(reupdate,pg)}
+    }else{
+    # if no rules about that page, add it to reupdate and remove it from 
+      reupdate<-c(reupdate,pg)}}
+reupdate}
+
+```
+
+Then find the middle values and add them together
+
+```{r}
+
+part2<-sapply(outoforder,function(x){
+  ### run fix order
+  y<-fixorder(pagerules,x)
+  ### find the middle value
+  y<-y[((1+length(y))/2)]
+  y})
+### add the middle values together
+part2<-sum(part2)
+part2
+```
+

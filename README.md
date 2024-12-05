@@ -7,8 +7,8 @@
 | 2 | *Red-Nosed Reports* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-2.nb.html) | [Notebook](<Day 2/Day2.Rmd>) | [Files](<Day 2>) |
 | 3 | *Mull It Over* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-3.nb.html) | [Notebook](<Day 3/Day3.Rmd>) | [Files](<Day 3>) |
 | 4 | *Ceres Search* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-4.nb.html) | [Notebook](<Day 4/Day4.Rmd>) | [Files](<Day 4>) |
+| 5 | *Print Queue* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-5.nb.html) | [Notebook](<Day 5/Day5.Rmd>) | [Files](<Day 5>) |
 <!-- 
-| 5 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-5.nb.html) | [Notebook](<Day 5/Day5.Rmd>) | [Files](<Day 5>) |
 | 6 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-6.nb.html) | [Notebook](<Day 6/Day6.Rmd>) | [Files](<Day 6>) |
 | 7 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-7.nb.html) | [Notebook](<Day 7/Day7.Rmd>) | [Files](<Day 7>) |
 | 8 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-8.nb.html) | [Notebook](<Day 8/Day8.Rmd>) | [Files](<Day 8>) |
