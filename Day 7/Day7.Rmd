@@ -1,0 +1,116 @@
+---
+title: "Day 7 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day7Sample.txt")
+cal_eqs<-lapply(str_split(input, " |: "),as.numeric)
+### turn the equations into vectors
+```
+
+## Part 1
+Checks to see if the test is valid - returns true if the equation can be made true 
+
+```{r}
+valid_eq<-function(eq){
+  ### start with the assumption that this is invalid
+  ### this probably doesn't need to be a priority queue - but what the heck.
+  pq<-priority_queue()
+  ### the target is the test value
+  target<-eq[1]
+  eq<-eq[-1]
+  ### start with the assumption that it is invalid
+  valid<-FALSE
+  ### put the elements into the queue
+  pq$push(eq,0)
+  while(pq$size()>0){
+    e<-pq$pop()
+    ### if e has length 1 check to see if it equals the target
+    if(length(e)==1){
+      if(e==target){
+        ### if so, there's a valid answer - stop
+        valid<-TRUE
+        break
+        ### otherwise keep checking
+      }else{next}}
+    ### as all of the numbers are positive,
+    ### if the first element is greater then target, no reason to continue
+    if(e[1]>target){next}
+    ### otherwise, add the first two elements and put the remainder into the queue
+    eplus<-c(e[1]+e[2],e[-c(1,2)])
+    ### or multiply them
+    emult<-c(e[1]*e[2],e[-c(1,2)])
+    pq$push(eplus,eplus[1])
+    pq$push(emult,emult[1])}
+  valid}
+
+```
+
+For part 1 - find the sum of all of the equations that can be made valid , 
+```{r}
+
+part1<-sum(sapply(cal_eqs,function(x){y<-valid_eq(x)*x[1]}))
+part1
+```
+
+
+## Part 2
+Just add another operator to the options
+
+```{r}
+valid_concat_eq<-function(eq){
+  a<-Sys.time()
+  ### start with the assumption that this is invalid
+  ### this probably doesn't need to be a priority queue - but what the heck.
+  pq<-priority_queue()
+  ### the target is the test value
+  target<-eq[1]
+  eq<-eq[-1]
+  ### start with the assumption that it is invalid
+  valid<-FALSE
+  ### put the elements into the queue
+  pq$push(eq,0)
+  while(pq$size()>0){
+    e<-pq$pop()
+    ### if e has length 1 check to see if it equals the target
+    if(length(e)==1){
+      if(e==target){
+        ### if so, there's a valid answer - stop
+        valid<-TRUE
+        break
+        ### otherwise keep checking
+      }else{next}}
+    ### as all of the numbers are positive,
+    ### if the first element is greater then target, no reason to continue
+    if(e[1]>target){next}
+    ### otherwise, add the first two elements and put the remainder into the queue
+    eplus<-c(e[1]+e[2],e[-c(1,2)])
+    ### or multiply them
+    emult<-c(e[1]*e[2],e[-c(1,2)])
+    ### or concatenate them
+    econcat<-c(as.numeric(str_c(e[1],e[2])),e[-c(1,2)])
+    pq$push(eplus,eplus[1])
+    pq$push(emult,emult[1])
+    pq$push(econcat,econcat[1])}
+  valid}
+
+```
+
+The same for part 2
+
+```{r}
+part2<-sum(sapply(cal_eqs,function(x){y<-valid_concat_eq(x)*x[1]}))
+part2
+```
