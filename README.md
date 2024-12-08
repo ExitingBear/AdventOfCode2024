@@ -10,8 +10,8 @@
 | 5 | *Print Queue* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-5.nb.html) | [Notebook](<Day 5/Day5.Rmd>) | [Files](<Day 5>) |
 | 6 | *Guard Gallivant* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-6.nb.html) | [Notebook](<Day 6/Day6.Rmd>) | [Files](<Day 6>) |
 | 7 | *Bridge Repair* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-7.nb.html) | [Notebook](<Day 7/Day7.Rmd>) | [Files](<Day 7>) |
+| 8 | *Resonant Collinearity* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-8.nb.html) | [Notebook](<Day 8/Day8.Rmd>) | [Files](<Day 8>) |
 <!-- 
-| 8 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-8.nb.html) | [Notebook](<Day 8/Day8.Rmd>) | [Files](<Day 8>) |
 | 9 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-9.nb.html) | [Notebook](<Day 9/Day9.Rmd>) | [Files](<Day 9>) |
 | 10 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-10.nb.html) | [Notebook](<Day 10/Day10.Rmd>) | [Files](<Day 10>) |
 | 11 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-11.nb.html) | [Notebook](<Day 11/Day11.Rmd>) | [Files](<Day 11>) |
