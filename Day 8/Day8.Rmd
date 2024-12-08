@@ -1,0 +1,137 @@
+---
+title: "Day 8 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day8Sample.txt")
+```
+create a dictionary of the antennas.
+also find the edges of the map
+
+```{r}
+antennadict<-dict()
+for(i in 1:length(input)){
+  x<-unlist(str_split(input[i],""))
+  for(j in 1:length(x)){
+    if(x[j]!="."){
+      antennadict$set(x[j],c(antennadict$get(x[j],default=list()),list(c(j,i)) ) )}}}
+maprows<-length(input)
+mapcolumns<-nchar(input[1])
+```
+
+
+## Part 1
+
+Quick function for finding anti-node pairs - takes in the antennas & map limits
+```{r}
+get_ans<-function(antenna1, antenna2, mr, mc){
+  ans<-list()
+  dif<-antenna1-antenna2
+  an1<-antenna1+dif
+  an2<-antenna2-dif
+  ### if within bounds, it's a valid node
+  if(all(an1>=c(1,1))&&all(an1<=c(mc,mr))){ans<-c(ans,list(an1))}
+  if(all(an2>=c(1,1))&&all(an2<=c(mc,mr))){ans<-c(ans,list(an2))}
+ans}
+
+```
+
+Find the map strength
+
+```{r}
+mapstrength<-function(ad,mr,mc){
+  ### get the map frequency
+  freqs<-unlist(ad$keys())
+  ### create a list of antinodes
+  all_antennas<-list()
+  ### for each frequency, find all of the antinodes possible
+  for(i in 1:length(freqs)){
+    f<-freqs[i]
+    f_antennas<-ad$get(f)
+    if(length(f_antennas)>=2){
+    for(j in 1:(length(f_antennas)-1)){
+      for(k in (j+1):length(f_antennas)){
+        all_antennas<-c(all_antennas,get_ans(f_antennas[[j]],f_antennas[[k]],mr,mc))}}}}
+  ### get rid of duplicates
+  all_antennas<-unique(all_antennas)
+  all_antennas}
+```
+
+```{r}
+### p1 list of all antinodes
+p1<-mapstrength(antennadict,maprows,mapcolumns)
+### part 1 is the length of the list
+part1<-length(p1)
+part1
+```
+## Part 2
+
+
+Just change how to find anti-nodes so that it keeps going until it reaches the edge of the map and includes the antennas themselves
+
+
+```{r}
+get_harmonics<-function(antenna1, antenna2, mr, mc){
+  ### add the antennas to the list
+  ans<-c(list(antenna1),list(antenna2))
+  dif<-antenna1-antenna2
+  an1<-antenna1+dif
+  ### keep adding dif to antenna1
+  while(all(an1>=c(1,1))&&all(an1<=c(mc,mr))){
+    ans<-c(ans,list(an1))
+    an1<-an1+dif}
+  ### do the same for an2
+  an2<-antenna2-dif
+  while(all(an2>=c(1,1))&&all(an2<=c(mc,mr))){
+    ans<-c(ans,list(an2))
+    an2<-an2-dif}
+ans}
+
+```
+
+With the new map strength that includes harmonics:
+
+```{r}
+harmonicstrength<-function(ad,mr,mc){
+  ### get the map frequency
+  freqs<-unlist(ad$keys())
+  ### create a list of antinodes
+  all_antennas<-list()
+  ### for each frequency, find all of the antinodes possible
+  for(i in 1:length(freqs)){
+    f<-freqs[i]
+    f_antennas<-ad$get(f)
+    ### only do this if there are at least 2 antennas of any given type
+    if(length(f_antennas)>=2){
+      for(j in 1:(length(f_antennas)-1)){
+        for(k in (j+1):length(f_antennas)){
+          all_antennas<-c(all_antennas,get_harmonics(f_antennas[[j]],f_antennas[[k]],mr,mc))}}}}
+  ### get rid of duplicates
+  all_antennas<-unique(all_antennas)
+  all_antennas}
+```
+
+Rerun part 2.
+
+```{r}
+### p2 is the list of all antinodes
+p2<-harmonicstrength(antennadict,maprows,mapcolumns)
+### part 2 is the length of the list
+part2<-length(p2)
+part2
+```
+
+
