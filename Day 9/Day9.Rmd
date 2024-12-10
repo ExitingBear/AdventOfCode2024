@@ -1,0 +1,146 @@
+---
+title: "Day 9 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day9Sample.txt")
+
+### turn the input into a vector
+diskmap<-sapply(str_split(input, ""),as.numeric)
+```
+
+## Part 1
+
+I did not think this would work by putting it into a new vector, that was supposed to be a temporary measure for testing so that I could see that I was moving ids right.  But it *did* work, and not all that terribly slowly.  So... there
+
+Started with the frontid (0), then final id (length div 2).  Then worked my way through the diskmap.
+On odds, add that number of ids to the compactmap.  On evens, find out how many blanks there are to fill. Then decrement the number at the tail end to fill all of those blanks.  Stop working on the evens if it has reached the frontid   
+
+```{r}
+reformattovector<-function(dm){
+  ### find out the final id & its value
+  finid<-c(length(dm)%/%2)
+  ### start from 0
+  frontid<-0
+  ###
+  compactmap<-c()
+  ### start counting down
+  i<-1
+  ### while i les than the length of the map
+  while(i<=length(dm)){
+    ### if i is odd, start from the front of the map
+    if(i%%2==1){
+      compactmap<-c(compactmap,rep(frontid,dm[i]))
+      ### update the frontid
+      frontid<-frontid+1
+    }else{
+      ### if i is even
+      blanks<-dm[i]
+      ### so long as there's at least one blank space to fill and it hasn't matched up with the front id yet
+      while(blanks>0&&finid>frontid){
+        ### check to see if there are any more of the final id. If so, decrement the count of final and fill one of the blanks
+        if(tail(dm,1)>0){
+          compactmap<-c(compactmap,finid)
+          dm[length(dm)]<-dm[length(dm)]-1
+          blanks<-blanks-1
+          ## if not, remove the final two elements of the map
+        }else{
+          dm<-dm[-c(length(dm),length(dm)-1)]
+          ### update the finalid
+          finid<-finid-1}}}
+  i<-i+1}
+### find the checksum by multiplying the compactmap vector by the 0:length-1
+checksum<-sum(compactmap*(0:(length(compactmap)-1)))
+checksum}
+
+```
+
+
+```{r}
+part1<-reformattovector(diskmap)
+part1
+```
+
+## Part 2
+
+This is insane - and very much not the right way to do this (I think a double ended queue? maybe? but I don't want to figure that out right now), but it is a working way to do this - so... there?
+
+List out the ids and how many there are, list out all of the blank spaces, and work back to front through the ids, filling up the blank spaces from front to back.
+Once it is clear where all the ids go, find the checksum
+
+
+```{r}
+recompact<-function(dm){
+  #### create 3 different dataframes:
+  ### df1 is id, count, starting number
+  originalpos<-data.frame(matrix(ncol=3,nrow=0))
+  colnames(originalpos)<-c("id","count","startspace")
+  ### df2 is for freespace - count & starting number
+  freespace<-data.frame(matrix(ncol=2,nrow=0))
+  colnames(freespace)<-c("count","startspace")
+  ### df3 is target endspace id, count, starting number
+  target<-data.frame(matrix(ncol=3,nrow=0))
+  colnames(target)<-c("id","count","startspace")
+  
+  ### start by going through the map and adding info to the the first two dfs
+  nextstart<-0
+  for(i in 1:length(dm)){
+    ### if odd (a file)
+    if(i%%2==1){
+      originalpos<-rbind(originalpos,c(id=(i-1)/2,count=dm[i],startspace=nextstart))
+      ### if even (freespace)
+    }else{
+      freespace<-rbind(freespace,c(count=dm[i],nextstart))}
+    nextstart<-nextstart+dm[i]}
+  colnames(originalpos)<-c("id","count","startspace")
+  colnames(freespace)<-c("count","startspace")
+  ### filter out freespaces that are 0
+  freespace <- freespace %>% filter(count>0)
+  
+  ### then starting from the bottom of the originalpos
+   for(i in nrow(originalpos):1){
+     op<-originalpos[i,]
+     ### filter out any free spaces to the right and any free spaces that are 0
+     freespace<-freespace %>% filter(startspace<=op$startspace,count>=1)
+     ### find the first freespace that is big enough for the space
+     ### that also comes before the current space
+     fs<-which(freespace$count>=op$count)
+     ### if there is a place for the file to go
+     if(length(fs)>0){
+       fs<-fs[1]
+       ### use that as the new startspace
+       op$startspace<-freespace$startspace[fs]
+       ### update freespace
+       freespace$startspace[fs]<-freespace$startspace[fs]+op$count
+       freespace$count[fs]<-freespace$count[fs]-op$count}
+     ### put op into the target list
+     target<-rbind(target,op)}
+  ### finally, take the targets and use those to calculate the checksum:
+  checksum<-c()
+  for(i in 1:nrow(target)){
+    t<-target[i,]
+    s<-t$startspace
+    cs<-0
+    for(j in 1:t$count){
+      cs<-cs+(t$id*s)
+      s<-s+1}
+    checksum<-c(checksum,cs)}
+  sum(checksum)}
+```
+
+```{r}
+part2<-recompact(diskmap)
+part2
+```
