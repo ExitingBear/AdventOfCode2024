@@ -127,17 +127,23 @@ recompact<-function(dm){
        freespace$count[fs]<-freespace$count[fs]-op$count}
      ### put op into the target list
      target<-rbind(target,op)}
+  
   ### finally, take the targets and use those to calculate the checksum:
-  checksum<-c()
-  for(i in 1:nrow(target)){
-    t<-target[i,]
-    s<-t$startspace
-    cs<-0
-    for(j in 1:t$count){
-      cs<-cs+(t$id*s)
-      s<-s+1}
-    checksum<-c(checksum,cs)}
-  sum(checksum)}
+  target<-target %>% rowwise %>% mutate(checksum=csfind(id,startspace,count))
+  
+  sum(target$checksum)}
+
+
+### finds the checksum given id, start, count
+csfind<-function(id,s,c){
+  cs<-0
+  for(j in 1:c){
+    cs<-cs+id*s
+    s<-s+1}
+  cs}
+
+
+
 ```
 
 ```{r}

@@ -1,0 +1,116 @@
+---
+title: "Day 10 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+#input<-read_lines("Day10Sample.txt")
+input<-read_lines("../../AoCData/AOC2024/Day10.txt")
+
+### turn this into a matrix
+
+topmap<-matrix(0,nrow=length(input),ncol=nchar(input[1]))
+for(i in 1:length(input)){topmap[i,]<-as.numeric(unlist(str_split(input[i],"")))}
+```
+
+
+## Part 1
+First, find all of the zeros
+
+```{r}
+zeros<-which(topmap==0,arr.ind=TRUE)
+```
+
+Function that finds all of the trailheads for a zero (x,y)
+
+```{r}
+counttrailheads<-function(tm,zero){
+  ### create the queue & the dictionary
+  q<-queue()
+  beenthere<-dict()
+  s<-c(0,zero[1],zero[2])
+  q$push(s)
+  maxrows<-nrow(tm)
+  maxcols<-ncol(tm)
+  trailheads<-0
+  while(q$size()>0){
+    s<-q$pop()
+    ### if been there, stop
+    if(beenthere$has(str_c(c(s[2],s[3]),collapse="~"))){
+      next}else{beenthere$set(str_c(c(s[2],s[3]),collapse="~"),s[1])}
+    if(s[1]==9){
+      trailheads<-trailheads+1
+      next}
+    ### try in each direction
+    if(s[2]<maxcols){
+      if(tm[s[3],(s[2]+1)]==s[1]+1){q$push(c(s[1]+1,s[2]+1,s[3]))}}
+    if(s[2]>1){
+      if(tm[s[3],(s[2]-1)]==s[1]+1){q$push(c(s[1]+1,s[2]-1,s[3]))}}
+    if(s[3]<maxrows){
+      if(tm[(s[3]+1),s[2]]==s[1]+1){q$push(c(s[1]+1,s[2],s[3]+1))}}
+    if(s[3]>1){
+      if(tm[(s[3]-1),s[2]]==s[1]+1){q$push(c(s[1]+1,s[2],s[3]-1))}}}
+  trailheads}
+```
+
+
+```{r}
+p1<-sapply(1:nrow(zeros),
+           function(x){
+             counttrailheads(topmap,c(zeros[x,2],zeros[x,1]))})
+part1<-sum(p1)
+part1
+
+```
+## Part 2
+If I understand this correctly, It's the same, just don't check to see if that path has already been traversed?  So just remove the lines that check to see if that point has already been there.
+
+
+```{r}
+ratingcheck<-function(tm,zero){
+  ### create the queue & the dictionary
+  q<-queue()
+  s<-c(0,zero[1],zero[2])
+  q$push(s)
+  maxrows<-nrow(tm)
+  maxcols<-ncol(tm)
+  trailheads<-0
+  while(q$size()>0){
+    s<-q$pop()
+    if(s[1]==9){
+      trailheads<-trailheads+1
+      next}
+    ### try in each direction
+    if(s[2]<maxcols){
+      if(tm[s[3],(s[2]+1)]==s[1]+1){q$push(c(s[1]+1,s[2]+1,s[3]))}}
+    if(s[2]>1){
+      if(tm[s[3],(s[2]-1)]==s[1]+1){q$push(c(s[1]+1,s[2]-1,s[3]))}}
+    if(s[3]<maxrows){
+      if(tm[(s[3]+1),s[2]]==s[1]+1){q$push(c(s[1]+1,s[2],s[3]+1))}}
+    if(s[3]>1){
+      if(tm[(s[3]-1),s[2]]==s[1]+1){q$push(c(s[1]+1,s[2],s[3]-1))}}}
+  trailheads}
+```
+
+
+
+```{r}
+p2<-sapply(1:nrow(zeros),
+           function(x){
+             ratingcheck(topmap,c(zeros[x,2],zeros[x,1]))})
+part2<-sum(p2)
+part2
+
+``` 
