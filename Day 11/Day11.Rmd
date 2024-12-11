@@ -49,7 +49,9 @@ blinkinglanternfish<-function(r,n){
     n<-as.data.frame(cbind(n,rep(1,length(n))))
     colnames(n)<-c("val","cnt")
     while(r>0){
+    ### create a blank dataframe
     nxt<-as.data.frame(matrix(nrow=0,ncol=2))
+    ### apply the rule to each row in the original frame and put the output in the new frame
     for(i in 1:nrow(n)){
       if(n$val[i]==0){
         nxt<-rbind(nxt,c(1,n$cnt[i]))
@@ -61,9 +63,9 @@ blinkinglanternfish<-function(r,n){
         nxt<-rbind(nxt,c(b,n$cnt[i]))
       }else{
         nxt<-rbind(nxt,c(n$val[i]*2024,n$cnt[i]))}
-    ### change the column names
+    ### update the column names
     colnames(nxt)<-c("val","cnt")}
-    ### summarize the columns
+    ### summarize the columns so each value has the number of times that value appears on a stone.
     n<-nxt%>% group_by(val)%>%summarise(cnt=sum(cnt))
     r<-r-1}
 stones<-sum(n$cnt)
