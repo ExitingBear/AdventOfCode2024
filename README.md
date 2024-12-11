@@ -13,8 +13,8 @@
 | 8 | *Resonant Collinearity* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-8.nb.html) | [Notebook](<Day 8/Day8.Rmd>) | [Files](<Day 8>) |
 | 9 | *Disk Fragmenter* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-9.nb.html) | [Notebook](<Day 9/Day9.Rmd>) | [Files](<Day 9>) |
 | 10 | *Hoof It* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-10.nb.html) | [Notebook](<Day 10/Day10.Rmd>) | [Files](<Day 10>) |
+| 11 | *Plutonian Pebbles* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-11.nb.html) | [Notebook](<Day 11/Day11.Rmd>) | [Files](<Day 11>) |
 <!-- 
-| 11 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-11.nb.html) | [Notebook](<Day 11/Day11.Rmd>) | [Files](<Day 11>) |
 | 12 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-12.nb.html) | [Notebook](<Day 12/Day12.Rmd>) | [Files](<Day 12>) |
 | 13 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-13.nb.html) | [Notebook](<Day 13/Day13.Rmd>) | [Files](<Day 13>) |
 | 14 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-14.nb.html) | [Notebook](<Day 14/Day14.Rmd>) | [Files](<Day 14>) |
