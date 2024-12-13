@@ -33,6 +33,26 @@ for(i in 1:length(p)){
 
 ```
 
+This moves:
+```
+Button A: X+94, Y+34
+Button B: X+22, Y+67
+Prize: X=8400, Y=5400
+```
+to
+
+\[\left(\begin{array}{cc} 
+94 & 22\\
+34 & 67
+\end{array}\right)
+\left(\begin{array}{cc} 
+8400\\5400
+\end{array}\right)\]
+
+ 
+so that it can be put into solve().\\
+Solve() did not work, but the formatting did.
+
 ## Part 1
 
 Determinants ftw.
