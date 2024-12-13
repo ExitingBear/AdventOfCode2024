@@ -15,8 +15,8 @@
 | 10 | *Hoof It* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-10.nb.html) | [Notebook](<Day 10/Day10.Rmd>) | [Files](<Day 10>) |
 | 11 | *Plutonian Pebbles* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-11.nb.html) | [Notebook](<Day 11/Day11.Rmd>) | [Files](<Day 11>) |
 | 12 | *Garden Groups* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-12.nb.html) | [Notebook](<Day 12/Day12.Rmd>) | [Files](<Day 12>) |
+| 13 | *Claw Contraption* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-13.nb.html) | [Notebook](<Day 13/Day13.Rmd>) | [Files](<Day 13>) |
 <!-- 
-| 13 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-13.nb.html) | [Notebook](<Day 13/Day13.Rmd>) | [Files](<Day 13>) |
 | 14 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-14.nb.html) | [Notebook](<Day 14/Day14.Rmd>) | [Files](<Day 14>) |
 | 15 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-15.nb.html) | [Notebook](<Day 15/Day15.Rmd>) | [Files](<Day 15>) |
 | 16 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-16.nb.html) | [Notebook](<Day 16/Day16.Rmd>) | [Files](<Day 16>) |
