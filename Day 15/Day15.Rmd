@@ -1,0 +1,266 @@
+---
+title: "Day 15 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(memoise)
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day15Sample2.txt")
+bl<-min(which(input==""))
+
+### create the warehouse
+warehouse<-matrix(nrow=(bl-1),ncol=nchar(input[1]))
+for(i in 1:(bl-1)){warehouse[i,]<-unlist(str_split(input[i],""))}
+### get the instructions
+instructions<-c()
+for(i in (bl+1):length(input)){
+instructions<-c(instructions,unlist(str_split(input[i],"")))}
+```
+
+## Part 1
+
+Creating a function - push()
+
+This should take a vector with the wall at 1 & the robot at the end.  Will return list - first element is T/F if something could move.  Second is the updated, pushed vector.
+
+```{r}
+push<-function(v){
+  wall<-max(which(v=="#"))
+  if(!("."%in%v)){return(list(FALSE))}
+  blnk<-max(which(v=="."))
+  ### if there's no blanks before the wall, return FALSE
+  if(blnk<wall){return(list(FALSE))}
+  ### otherwise, return TRUE
+list(TRUE,c(v[-blnk],"."))}
+```
+
+
+Move the robot
+```{r}
+rearrange<-function(w,inst){
+  maxx<-ncol(w)
+  maxy<-nrow(w)
+  ### find the robot starting place
+  r<-which(w=="@",arr.ind = TRUE)
+  rx<-r[1,2]
+  ry<-r[1,1]
+  ### run through each instruction
+  for(i in 1:length(inst)){
+    nxti<-inst[i]
+    switch(nxti,
+           "^"={
+#            cat("^",w[1:ry,rx],"\n")
+             up<-push(w[1:ry,rx])
+             ## if can't push, go to the next instruction
+             if(up[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[1:ry,rx]<-up[[2]]
+             ry<-ry-1}
+           },
+           "<"={
+ #            cat("<",w[ry,1:rx],"\n")
+             left<-push(w[ry,1:rx])
+             ## if can't push, go to the next instruction
+             if(left[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[ry,1:rx]<-left[[2]]
+             rx<-rx-1}
+           },
+           "v"={
+#             cat("v",w[maxy:ry,rx],"\n")
+             down<-push(w[maxy:ry,rx])
+             ## if can't push, go to the next instruction
+             if(down[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[maxy:ry,rx]<-down[[2]]
+             ry<-ry+1}
+           },
+           ">"={
+#             cat(">",w[ry,maxx:rx],"\n")
+             right<-push(w[ry,maxx:rx])
+             ## if can't push, go to the next instruction
+             if(right[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[ry,maxx:rx]<-right[[2]]
+             rx<-rx+1}
+           },
+           cat("bad direction\n"))}
+  ### calculate gps
+  gps<-as.data.frame(which(w=="O",arr.ind=TRUE))
+  gps<-gps%>%mutate(crd=100*(row-1)+(col-1))
+sum(gps$crd)}
+```
+
+
+
+```{r}
+part1<-rearrange(warehouse,instructions)
+part1
+```
+## Part 2
+
+First, double the width of the warehouse
+
+```{r}
+### create the warehouse
+widehouse<-matrix(nrow=(bl-1),ncol=2*nchar(input[1]))
+for(i in 1:(bl-1)){
+  y<-unlist(str_split(input[i],""))
+  y<-sapply(y,function(x){
+    switch(x,
+           "#"=c("#","#"),
+           "O"=c("[","]"),
+           "."=c(".","."),
+           "@"=c("@","."),
+           NA)})
+  widehouse[i,]<-y}
+```
+
+Left and right do not change. Up and down, do
+pushup() & pushdown return FALSE if a move is not possible. They return the robot and any box halves that need to move if it is possible.  For sorting purposes, they're in format y~x and padded with leading 0s to three digits.
+
+```{r}
+pushup<-function(w,x,y){
+  chgs<-c()
+  u<-w[y-1,x]
+  switch(u,
+         "."={
+           chgs<-str_flatten(str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~"),"~")},
+         "#"=return(FALSE),
+         "["={
+           above<-pushup(w,x,y-1)
+           if(above[1]==FALSE){return(FALSE)}
+           over<-pushup(w,x+1,y-1)
+           if(over[1]==FALSE){return(FALSE)}
+           chgs<-c(str_flatten(str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~"),"~"),above,over)},
+         "]"={
+           above<-pushup(w,x,y-1)
+           if(above[1]==FALSE){return(FALSE)}
+           over<-pushup(w,x-1,y-1)
+           if(over[1]==FALSE){return(FALSE)}
+           chgs<-c(str_flatten(str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~"),"~"),above,over)},
+         cat("u=",u,"unknown\n"))
+  unique(chgs)}
+
+### I should have changed above to below - but I didn't.
+pushdown<-function(w,x,y){
+  chgs<-c()
+  u<-w[y+1,x]
+  switch(u,
+         "."={
+           chgs<-str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~")},
+         "#"=return(FALSE),
+         "["={
+           above<-pushdown(w,x,y+1)
+           if(above[1]==FALSE){return(FALSE)}
+           over<-pushdown(w,x+1,y+1)
+           if(over[1]==FALSE){return(FALSE)}
+           chgs<-c(str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~"),above,over)},
+         "]"={
+           above<-pushdown(w,x,y+1)
+           if(above[1]==FALSE){return(FALSE)}
+           over<-pushdown(w,x-1,y+1)
+           if(over[1]==FALSE){return(FALSE)}
+           chgs<-c(str_flatten(c(sprintf("%03d",y),sprintf("%03d",x)),"~"),above,over)},
+         cat("d=",u,"unknown\n"))
+  unique(chgs)}
+```
+
+
+For up and down, the rearrangewide() sorts everything that moves and then moves it individually from top to bottom (for up) or bottom to top (for down) 
+
+```{r}
+rearrangewide<-function(w,inst){
+  maxx<-ncol(w)
+  maxy<-nrow(w)
+  ### find the robot starting place
+  r<-which(w=="@",arr.ind = TRUE)
+  rx<-r[1,2]
+  ry<-r[1,1]
+  ### run through each instruction
+  for(i in 1:length(inst)){
+    nxti<-inst[i]
+    switch(nxti,
+           "^"={
+#            cat("^",w[1:ry,rx],"\n")
+             up<-pushup(w,rx,ry)
+             ## if can't push, go to the next instruction
+             if(up[1]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{
+               ### sort up from the top to the bottom
+              up<-sort(up)
+              for(j in 1:length(up)){
+                ### get the coordinate
+                u<-unlist(lapply(str_split(up[j],"~"),as.numeric))
+                ### copy its value to the row above
+                w[(u[1]-1),u[2]]<-w[u[1],u[2]]
+                ### put a period there - will be overwritten if something is put into it
+                w[u[1],u[2]]<-"."}
+              w[ry,rx]<-"."
+              ry<-ry-1}
+           },
+### left doesn't change
+           "<"={
+             left<-push(w[ry,1:rx])
+             ## if can't push, go to the next instruction
+             if(left[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[ry,1:rx]<-left[[2]]
+             rx<-rx-1}
+           },
+           "v"={
+#             cat("v",w[maxy:ry,rx],"\n")
+             down<-pushdown(w,rx,ry)
+             ## if can't push, go to the next instruction
+             if(down[1]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{
+              down<-sort(down,decreasing=TRUE)
+              for(j in 1:length(down)){
+                ### get the coordinate
+                d<-unlist(lapply(str_split(down[j],"~"),as.numeric))
+                ### copy its value to the row above
+                w[(d[1]+1),d[2]]<-w[d[1],d[2]]
+                w[d[1],d[2]]<-"."}
+              w[ry,rx]<-"."
+              ry<-ry+1}
+           },
+### right doesn't change
+           ">"={
+             right<-push(w[ry,maxx:rx])
+             ## if can't push, go to the next instruction
+             if(right[[1]]==FALSE){next
+               ### otherwise, move everything & update the robot's place
+             }else{w[ry,maxx:rx]<-right[[2]]
+             rx<-rx+1}
+           },
+           cat("bad direction\n"))
+    
+    stillboxes<-which(w=="[")+nrow(w)
+    if(any(w[stillboxes]!="]")){return(list(i,nxti,w,stillboxes))}
+    stillboxes<-which(w=="]")-nrow(w)
+    if(any(w[stillboxes]!="[")){return(list(i,nxti,w,stillboxes))}
+    }
+  ### calculate gps
+  gps<-as.data.frame(which(w=="[",arr.ind=TRUE))
+  gps<-gps%>%mutate(crd=100*(row-1)+(col-1))
+sum(gps$crd)}
+```
+
+```{r}
+part2<-rearrangewide(widehouse,instructions)
+part2
+```
