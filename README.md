@@ -18,8 +18,8 @@
 | 13 | *Claw Contraption* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-13.nb.html) | [Notebook](<Day 13/Day13.Rmd>) | [Files](<Day 13>) |
 | 14 | *Restroom Redoubt* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-14.nb.html) | [Notebook](<Day 14/Day14.Rmd>) | [Files](<Day 14>) |
 | 15 | *Warehouse Woes* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-15.nb.html) | [Notebook](<Day 15/Day15.Rmd>) | [Files](<Day 15>) |
+| 16 | *Reindeer Maze* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-16.nb.html) | [Notebook](<Day 16/Day16.Rmd>) | [Files](<Day 16>) |
 <!-- 
-| 16 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-16.nb.html) | [Notebook](<Day 16/Day16.Rmd>) | [Files](<Day 16>) |
 | 17 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-17.nb.html) | [Notebook](<Day 17/Day17.Rmd>) | [Files](<Day 17>) |
 | 18 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-18.nb.html) | [Notebook](<Day 18/Day18.Rmd>) | [Files](<Day 18>) |
 | 19 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-19.nb.html) | [Notebook](<Day 19/Day19.Rmd>) | [Files](<Day 19>) |
