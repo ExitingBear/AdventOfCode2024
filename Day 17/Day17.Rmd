@@ -15,10 +15,41 @@ library(collections)
 options(scipen = 999)
 ```
 
+
+```{r}
+programcode<-sapply(str_split(read_lines("../../AoCData/AOC2024/Day17_1.txt"), ","),as.numeric)
+startingreg<-sapply(str_split(read_lines("../../AoCData/AOC2024/Day17_2.txt"), ","),as.numeric)
+```
+
+
 ```{r}
 ### regs is the vector in question
 regs<-vector("integer",3)
 ```
+
+```{r,echo=FALSE}
+xorbit<-function(a,b){
+  bina<-c()
+  for(x in 63:0){
+    bina<-c(bina,a%/%(2^x))
+    a<-a%%(2^x)}
+
+  binb<-c()
+  for(x in 63:0){
+    binb<-c(binb,b%/%(2^x))
+    b<-b%%(2^x)}
+  
+  c<-as.numeric(xor(bina,binb))
+
+  d<-0
+  for(i in 1:length(c)){
+    d<-2*d+c[i]}
+d}
+```
+
+## Part 1
+
+Simulate the computer
 
 ```{r}
 run_ops<-function(insts,r){
@@ -43,6 +74,7 @@ run_ops<-function(insts,r){
            ###  A<-A%/%2^cop
            "0"={r[1]<-r[1]%/%(2^cop)},
            ### B<-bitwOr(B,litop)
+           ### xorbit is defined later as part of part 2. It's a bitwise xor
            "1"={r[2]<-xorbit(r[2],litop)},
            ### B<-cop%%8
            "2"={r[2]<-cop%%8},
@@ -64,18 +96,14 @@ run_ops<-function(insts,r){
 ```
 
 ```{r}
-p1<-run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(34615120,0,0))
+p1<-run_ops(programcode,startingreg)
 part1<-str_c(p1,collapse=",")
 part1
 ```
-1,2,3,1,3,2,5,3,1
 ## Part 2
 
 Need to break this down - 
 
-```{r}
-run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(105706277661082,0,0))
-```
 My input is 16 numbers long with one output instruction and jumps at the end if A!=0
 A=Div(A,8) once per run, so A must be between 8^15 and 8^16-1
 
@@ -111,12 +139,10 @@ B=xor(B,C)
 print B mod 8
 return to the top
 
-So, B&C get reset every run (so they do not matter) only A does. Every run, A drops its last three bits. And so it can be worked backwards, the first three bits of A determine the last output, the second three bits determine the second to last, & so on.
+So, B&C get reset every run (so they do not matter) only A does. Every run, A drops its last three bits and doesn't change in any other way. And so it can be worked backwards, the first three bits of A determine the last output, the second three bits determine the second to last, & so on.
 
 So:
 ```{r}
-### this is the target
-target<-c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0)
 ### starting at 0
 finala<-c(0)
 ### for each number in the target
@@ -126,7 +152,7 @@ for(i in 1:16){
   for(j in 1:length(finala)){
     maybea<-finala[j]
     ### try adding 0 through 7 to 8*that number (or try with the next three bits) and get the first output
-    check<-sapply(0:7,function(x){(run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(maybea*8+x,0,0)))[1]})
+    check<-sapply(0:7,function(x){(run_ops(programcode,c(maybea*8+x,0,0)))[1]})
     ### find which of those is equal to the target output
     ok<-which(check==target[17-i])
     ### if any of them are
@@ -140,10 +166,6 @@ for(i in 1:16){
 ### the answer is the lowest possible value
   min(finala)
 ```
-
-
- 
-
 
 ```{r,include=FALSE,eval=FALSE}
 ### this is a rewrite of the program to ensure I knew what it did.  
