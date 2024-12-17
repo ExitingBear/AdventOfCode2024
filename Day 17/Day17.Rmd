@@ -1,0 +1,165 @@
+---
+title: "Day 17 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+### regs is the vector in question
+regs<-vector("integer",3)
+```
+
+```{r}
+run_ops<-function(insts,r){
+  i<-1
+  out<-c()
+  while(i<=length(insts)){
+    ### get the operands
+    litop<-insts[i+1]
+    c<-as.character(insts[i+1])
+    cop<-switch(c,
+                "0"=0,
+                "1"=1,
+                "2"=2,
+                "3"=3,
+                "4"=r[1],
+                "5"=r[2],
+                "6"=r[3],
+                "7"={},
+                cat("bad operand\n"))
+    opchar<-as.character(insts[i])
+    switch(opchar,
+           ###  A<-A%/%2^cop
+           "0"={r[1]<-r[1]%/%(2^cop)},
+           ### B<-bitwOr(B,litop)
+           "1"={r[2]<-xorbit(r[2],litop)},
+           ### B<-cop%%8
+           "2"={r[2]<-cop%%8},
+           ### if A!=0 - JUMP to the literal operand (adding one for the offset)
+           "3"={
+             if(r[1]!=0){
+               i<-litop+1
+               next}},
+           ### B<-bitwOr(B,C)
+           "4"={r[2]<-xorbit(r[2],r[3])},
+           ### output
+           "5"={out<-c(out,cop%%8)},
+           ### B<-B%/%2^cop
+           "6"={r[2]<-r[1]%/%(2^cop)},
+           "7"={r[3]<-r[1]%/%(2^cop)},
+           cat(opchar,"bad opcode\n"))
+    i<-i+2}
+  out}
+```
+
+```{r}
+p1<-run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(34615120,0,0))
+part1<-str_c(p1,collapse=",")
+part1
+```
+1,2,3,1,3,2,5,3,1
+## Part 2
+
+Need to break this down - 
+
+```{r}
+run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(105706277661082,0,0))
+```
+My input is 16 numbers long with one output instruction and jumps at the end if A!=0
+A=Div(A,8) once per run, so A must be between 8^15 and 8^16-1
+
+And because those numbers are too big, it can't use bitwXor()
+
+```{r}
+xorbit<-function(a,b){
+  bina<-c()
+  for(x in 63:0){
+    bina<-c(bina,a%/%(2^x))
+    a<-a%%(2^x)}
+
+  binb<-c()
+  for(x in 63:0){
+    binb<-c(binb,b%/%(2^x))
+    b<-b%%(2^x)}
+  
+  c<-as.numeric(xor(bina,binb))
+
+  d<-0
+  for(i in 1:length(c)){
+    d<-2*d+c[i]}
+d}
+```
+
+My instructions are:
+B=A%%8
+B=xor(B,5)    
+C=div(A,(2^B))
+B=xor(B,6)
+A=div(A,8)
+B=xor(B,C)
+print B mod 8
+return to the top
+
+So, B&C get reset every run (so they do not matter) only A does. Every run, A drops its last three bits. And so it can be worked backwards, the first three bits of A determine the last output, the second three bits determine the second to last, & so on.
+
+So:
+```{r}
+### this is the target
+target<-c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0)
+### starting at 0
+finala<-c(0)
+### for each number in the target
+for(i in 1:16){
+  tmp<-c()
+  ### for every possible a
+  for(j in 1:length(finala)){
+    maybea<-finala[j]
+    ### try adding 0 through 7 to 8*that number (or try with the next three bits) and get the first output
+    check<-sapply(0:7,function(x){(run_ops(c(2,4,1,5,7,5,1,6,0,3,4,3,5,5,3,0),c(maybea*8+x,0,0)))[1]})
+    ### find which of those is equal to the target output
+    ok<-which(check==target[17-i])
+    ### if any of them are
+    if(length(ok)>0){
+      ### adjust because it is indexed by 1
+      ok<-ok-1
+      ### add that to the potential a*8
+      tmp<-c(tmp,maybea*8+ok)}}
+    ### update the trials for another run
+    finala<-tmp}
+### the answer is the lowest possible value
+  min(finala)
+```
+
+
+ 
+
+
+```{r,include=FALSE,eval=FALSE}
+### this is a rewrite of the program to ensure I knew what it did.  
+rewrite<-function(a,b,c){
+  out<-c()
+  while(a>0){   #3,0
+  b<-a%%8       #2,4
+  b<-xorbit(b,5)#1,5
+  c<-a%/%(2^b)  #7,5
+  b<-xorbit(b,6)#1,6
+  a<-a%/%8      #0,3
+  b<-xorbit(b,c)#4,3
+  out<-c(out,b%%8)  #5,5
+  }             #3,0
+  cat(c,"\t")
+  out}
+```
+
+
