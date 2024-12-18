@@ -130,14 +130,14 @@ d}
 ```
 
 My instructions are:
-B=A%%8
-B=xor(B,5)    
-C=div(A,(2^B))
-B=xor(B,6)
-A=div(A,8)
-B=xor(B,C)
-print B mod 8
-return to the top
+B=A%%8\\
+B=xor(B,5)\\    
+C=div(A,(2^B))\\
+B=xor(B,6)\\
+A=div(A,8)\\
+B=xor(B,C)\\
+print B mod 8\\
+return to the top\\
 
 So, B&C get reset every run (so they do not matter) only A does. Every run, A drops its last three bits and doesn't change in any other way. And so it can be worked backwards, the first three bits of A determine the last output, the second three bits determine the second to last, & so on.
 
