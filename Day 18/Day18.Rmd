@@ -1,0 +1,97 @@
+---
+title: "Day 18 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day18Sample.txt")
+### Just read these into a dictionary - save the position in line
+corrupt<-dict()
+for(i in 1:length(input)){
+  corrupt$set(input[i],i)}
+```
+
+
+## Part 1
+Search. Use time as a way to figure out if something is in your way
+
+```{r}
+computerstorm<-function(cs,sx,sy,ex,ey,maxx,maxy,t){
+  beenthere<-dict()
+  pq<-priority_queue()
+  ## push x,y,steps
+  pq$push(c(sx,sy,0),0)
+  while(pq$size()>0){
+    curr<-pq$pop()
+    ### check to see if have been here before - if not - note
+    if(beenthere$has(str_flatten(c(curr[1],curr[2]),","))){next}
+    beenthere$set(str_flatten(c(curr[1],curr[2]),","),0)
+    ### check to see if we're at the end
+    if(all(curr[1:2]==c(ex,ey))){
+      return(curr[3])}
+    ### otherwise move
+    ##up
+    if(curr[2]>0){
+      ### check to see if that space is corrupt - if not, move there
+      checkup<-cs$get(str_flatten(c(curr[1],curr[2]-1),","),default=Inf)
+      if(t<checkup){pq$push(c(curr[1],curr[2]-1,curr[3]+1),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1],curr[2]-1))))}}
+    ##down
+    if(curr[2]<maxy){
+      ### check to see if that space is corrupt - if not, move there
+      checkdown<-cs$get(str_flatten(c(curr[1],curr[2]+1),","),default=Inf)
+      if(t<checkdown){pq$push(c(curr[1],curr[2]+1,curr[3]+1),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1],curr[2]+1))))}}
+    ##left
+    if(curr[1]>0){
+      ### check to see if that space is corrupt - if not, move there
+      checkleft<-cs$get(str_flatten(c(curr[1]-1,curr[2]),","),default=Inf)
+      if(t<checkleft){pq$push(c(curr[1]-1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1]-1,curr[2]))))}}
+    ##right
+    if(curr[1]<maxx){
+      ### check to see if that space is corrupt - if not, move there
+      checkleft<-cs$get(str_flatten(c(curr[1]+1,curr[2]),","),default=Inf)
+      if(t<checkleft){pq$push(c(curr[1]+1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1]+1,curr[2]))))}}
+  }
+  ### for part 2, return 0 if there's no way through
+return(0)}
+
+```
+
+```{r}
+computerstorm(corrupt,0,0,6,6,6,6,12)
+```
+
+## Part 2
+
+Find the limits to t
+```{r}
+findt<-function(cs,sx,sy,ex,ey,maxx,maxy){
+  ### what are the limits to t
+  lowlimit<-1
+  highlimit<-cs$size()
+  #### while there's a difference between low & high limit
+  while(lowlimit+1<highlimit){
+    ### try a random time...because I can.
+    trytime<-sample((lowlimit+1):(highlimit-1),1)
+    x<-computerstorm(cs,sx,sy,ex,ey,maxx,maxy,trytime)
+    if(x==0){highlimit<-trytime}else{lowlimit<-trytime}}
+  highlimit}
+```
+
+
+```{r}
+p2<-findt(corrupt,0,0,6,6,6,6)
+part2<-input[p2]
+part2
+```
