@@ -4,6 +4,7 @@ output: html_notebook
 ---
 
 ```{r setup, include=FALSE}
+library(gganimate)
 library(ggplot2)
 library(reshape2)
 library(knitr)
@@ -17,6 +18,8 @@ options(scipen = 999)
 
 ```{r}
 input<-read_lines("Day18Sample.txt")
+#input<-read_lines("../../AoCData/AOC2024/Day18.txt")
+
 ### Just read these into a dictionary - save the position in line
 corrupt<-dict()
 for(i in 1:length(input)){
@@ -72,6 +75,8 @@ return(0)}
 computerstorm(corrupt,0,0,6,6,6,6,12)
 ```
 
+
+
 ## Part 2
 
 Find the limits to t
@@ -95,3 +100,310 @@ p2<-findt(corrupt,0,0,6,6,6,6)
 part2<-input[p2]
 part2
 ```
+############################################
+
+```{r,include=FALSE,eval=FALSE}
+cspth<-function(cs,sx,sy,ex,ey,maxx,maxy,t){
+  beenthere<-dict()
+  pq<-priority_queue()
+  ## push x,y,steps
+  pq$push(list(sx,sy,0,str_flatten(c(sx,sy),",")),0)
+  while(pq$size()>0){
+    currl<-pq$pop()
+    curr<-unlist(currl[1:3])
+    pth<-unlist(currl[4])
+#    cat(pth,"\n")
+    ### check to see if have been here before - if not - note
+    if(beenthere$has(str_flatten(c(curr[1],curr[2]),","))){next}
+    beenthere$set(str_flatten(c(curr[1],curr[2]),","),0)
+    ### check to see if we're at the end
+    if(all(curr[1:2]==c(ex,ey))){
+      return(list(pth,curr[3]))}
+    ### otherwise move
+    ##up
+    if(curr[2]>0){
+      ### check to see if that space is corrupt - if not, move there
+      checkup<-cs$get(str_flatten(c(curr[1],curr[2]-1),","),default=Inf)
+      if(t<checkup){pq$push(list(curr[1],curr[2]-1,curr[3]+1,c(pth,str_flatten(c(curr[1],curr[2]-1),","))),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1],curr[2]-1))))}}
+    ##down
+    if(curr[2]<maxy){
+      ### check to see if that space is corrupt - if not, move there
+      checkdown<-cs$get(str_flatten(c(curr[1],curr[2]+1),","),default=Inf)
+      if(t<checkdown){pq$push(list(curr[1],curr[2]+1,curr[3]+1,c(pth,str_flatten(c(curr[1],curr[2]+1),","))),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1],curr[2]+1))))}}
+    ##left
+    if(curr[1]>0){
+      ### check to see if that space is corrupt - if not, move there
+      checkleft<-cs$get(str_flatten(c(curr[1]-1,curr[2]),","),default=Inf)
+      if(t<checkleft){pq$push(list(curr[1]-1,curr[2],curr[3]+1,c(pth,str_flatten(c(curr[1]-1,curr[2]),","))),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1]-1,curr[2]))))}}
+    ##right
+    if(curr[1]<maxx){
+      ### check to see if that space is corrupt - if not, move there
+      checkleft<-cs$get(str_flatten(c(curr[1]+1,curr[2]),","),default=Inf)
+      if(t<checkleft){pq$push(list(curr[1]+1,curr[2],curr[3]+1,c(pth,str_flatten(c(curr[1]+1,curr[2]),","))),-sum(1,curr[3],abs(c(ex,ey)-c(curr[1]+1,curr[2]))))}}
+  }
+  ### for part 2, return 0 if there's no way through
+return(0)}
+
+```
+
+
+
+
+
+```{r,include=FALSE,eval=FALSE}
+mzgr<-as.data.frame(matrix(nrow=0,ncol=2))
+lgr<-as.data.frame(matrix(nrow=0,ncol=2))
+for(i in 1:2989){
+  grab<-cspth(corrupt,0,0,70,70,70,70,i)
+  lgr<-rbind(lgr,c(grab[[2]],i))
+  tmp<-cbind(grab[[1]],i)
+  mzgr<-rbind(mzgr,tmp)
+  if(i%%100==0){cat(i,"\n")}}
+
+```
+```{r,include=FALSE,eval=FALSE}
+mzgr2<-mzgr
+
+```
+
+
+
+```{r,include=FALSE,eval=FALSE}
+colnames(mzgr)<-c("i","t")
+mzgr<-mzgr%>%
+  mutate(x=as.numeric(str_split_i(i,",",1)),y=as.numeric(str_split_i(i,",",2)),t=as.numeric(t))
+```
+
+```{r,include=FALSE,eval=FALSE}
+colnames(lgr)<-c("lth","t")
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+bckgr<-as.data.frame(input)
+bckgr<-cbind(bckgr,1:length(input))
+colnames(bckgr)<-c("i","t")
+bckgr<-bckgr%>%
+  mutate(x=as.numeric(str_split_i(i,",",1)),y=as.numeric(str_split_i(i,",",2)),i=paste0(" ",i," "),tdis=as.character(t))
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+pushdown<-ggplot()+
+  geom_tile(data=bckgr,aes(x=x,y=y))+
+  geom_label(data=bckgr,aes(label=i,x=0,y=6))+
+  geom_label(data=bckgr,aes(label=tdis,x=0,y=5))+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)+
+  shadow_mark()
+pushdown
+```
+
+```{r,include=FALSE,eval=FALSE}
+mazedown<-ggplot()+
+  geom_tile(data=mzgr,aes(x=x,y=y))+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)
+mazedown
+```
+
+```{r,include=FALSE,eval=FALSE}
+pushdown<-ggplot()+
+  geom_tile(data=bckgr,aes(x=x,y=y),color="black")+
+  geom_tile(data=mzgr,aes(x=x,y=y),color="red")+
+#  geom_label(data=lgr,aes(label=i,x=0,y=73))+
+  geom_label(data=bckgr,aes(label=i,x=0,y=72))+
+  geom_label(data=bckgr,aes(label=tdis,x=0,y=71))+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)+
+  shadow_mark(exclude_layer = 2:4)
+pushdown
+```
+Things to do - move the labels
+Figure out tiling (because it isn't quite doing what I want it to do.)
+
+
+```{r,include=FALSE,eval=FALSE}
+anim_save("attempt1.gif",pushdown)
+```
+#############################################
+
+```{r,include=FALSE,eval=FALSE}
+smallmzgr<-as.data.frame(matrix(nrow=0,ncol=2))
+smalllgr<-as.data.frame(matrix(nrow=0,ncol=2))
+for(i in 1:20){
+  grab<-cspth(corrupt,0,0,6,6,6,6,i)
+  smalllgr<-rbind(smalllgr,c(grab[[2]],i))
+  tmp<-cbind(grab[[1]],i)
+  smallmzgr<-rbind(smallmzgr,tmp)
+  if(i%%100==0){cat(i,"\n")}}
+
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+colnames(smallmzgr)<-c("i","t")
+smallmzgr<-smallmzgr%>%
+  mutate(x=as.numeric(str_split_i(i,",",1)),y=as.numeric(str_split_i(i,",",2)),t=as.numeric(t))
+```
+
+```{r}
+colnames(smalllgr)<-c("lth","t")
+```
+
+```{r,include=FALSE,eval=FALSE}
+smallbckgr<-as.data.frame(input)
+smallbckgr<-cbind(smallbckgr,1:length(input))
+colnames(smallbckgr)<-c("i","t")
+smallbckgr<-smallbckgr%>%
+  mutate(x=as.numeric(str_split_i(i,",",1)),y=as.numeric(str_split_i(i,",",2)),i=paste0(" ",i," "),tdis=as.character(t))
+```
+
+```{r,include=FALSE,eval=FALSE}
+smallbckgr<-smallbckgr%>%rowwise%>%mutate(shp=sample(1:6,1))
+```
+
+```{r,include=FALSE,eval=FALSE}
+smalllgr<-smalllgr%>%mutate(lth=paste(" steps: ",lth))
+
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+myshp<-c("\u2620","\u0030","\u0031","\u0026","\u0023","\u0025")
+
+smallpush<-ggplot()+
+  geom_point(data=smallbckgr,aes(x=x,y=y,shape=as.factor(shp)),color="#00ff2b",fill="#00ff41",size=10)+
+  geom_tile(data=smallmzgr,aes(x=x,y=y),color="#00ffff",fill="#7DF9FF",size=.3)+
+  scale_shape_manual(values=myshp)+
+  geom_label(data=smalllgr,aes(label=lth,x=0,y=8),color="#444444",fill="#00ff41")+
+  geom_label(data=smallbckgr,aes(label=i,x=0,y=12),color="#222222",fill="#00ff41")+
+  geom_label(data=smallbckgr,aes(label=tdis,x=0,y=10),color="#222222",fill="#00ff41")+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='#000000', color="#000000"),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)+
+  shadow_mark(exclude_layer = 2:5)+
+  enter_recolor(fill="#ffffff")
+smallpush
+```
+
+##########################
+```{r,include=FALSE,eval=FALSE}
+halfmzgr<-mzgr%>%filter(t<=250)
+halfbckgr<-bckgr%>%filter(t<=250)%>%rowwise%>%mutate(shp=sample(1:6,1))%>%mutate(tdis=paste0(" time: ",tdis," "),i=paste0(" coords: ",i))
+halflgr<-lgr%>%filter(t<=250)%>%rowwise%>%mutate(lth=paste0(" steps: ",lth," "))
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+myshp<-c("\u2620","\u0030","\u0031","\u0026","\u0023","\u0025")
+
+halfpush<-ggplot()+
+  geom_point(data=halfbckgr,aes(x=x,y=y,shape=as.factor(shp)),color="#00ff2b",fill="#00ff41",size=2)+
+  geom_tile(data=halfmzgr,aes(x=x,y=y),color="#00ffff",fill="#7DF9FF")+
+  scale_shape_manual(values=myshp)+
+  geom_text(data=halflgr,aes(label=lth,x=35,y=76),color="#008F11",fontface="bold")+
+  geom_text(data=halfbckgr,aes(label=i,x=20,y=76),color="#008F11")+
+  geom_text(data=halfbckgr,aes(label=tdis,x=5,y=76),color="#008F11")+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill='transparent',color="#008822"),
+        plot.background = element_rect(fill='#000000', color="#000000"),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)+
+  shadow_mark(exclude_layer = 2:5)+
+  enter_recolor(fill="#ffffff")
+
+
+animate(halfpush,nframes=200)
+```
+########################
+```{r,include=FALSE,eval=FALSE}
+bckgr<-bckgr%>%rowwise%>%mutate(shp=sample(1:6,1))%>%mutate(tdis=paste0(" TIME: ",tdis," "),i=paste0(" COORDS: ",i))
+lgr<-lgr%>%rowwise%>%mutate(lth=paste0(" STEPS: ",lth," "))
+```
+
+
+```{r,include=FALSE,eval=FALSE}
+myshp<-c("\u2620","\u0030","\u0031","\u0026","\u0023","\u0025")
+
+escapepath<-ggplot()+
+  geom_point(data=bckgr,aes(x=x,y=y,shape=as.factor(shp)),color="#00ff2b",fill="#00ff41",size=2)+
+  geom_tile(data=mzgr,aes(x=x,y=y),color="#00ffff",fill="#7DF9FF")+
+  scale_shape_manual(values=myshp)+
+  geom_text(data=lgr,aes(label=lth,x=35,y=76),color="#008F11")+
+  geom_text(data=bckgr,aes(label=i,x=20,y=76),color="#008F11")+
+  geom_text(data=bckgr,aes(label=tdis,x=5,y=76),color="#008F11")+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill='transparent',color="#008822"),
+        plot.background = element_rect(fill='#000000', color="#000000"),
+        legend.position="none")+
+  scale_y_reverse()+
+  coord_fixed()+
+  transition_states(t,wrap=FALSE)+
+  shadow_mark(exclude_layer = 2:5)+
+  enter_recolor(fill="#ffffff")
+
+
+```
+
+```{r,include=FALSE,eval=FALSE}
+anim_save("escape.gif",animate(escapepath,nframes=300))
+```
+
