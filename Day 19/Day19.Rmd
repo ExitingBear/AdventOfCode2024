@@ -1,0 +1,112 @@
+---
+title: "Day 19 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(memoise)
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day19Sample.txt")
+towels<-unlist(str_split(input[1],", "))
+
+designs<-c()
+for(i in 3:length(input)){designs<-c(designs,input[i])}
+
+```
+
+## Part 1
+
+
+```{r}
+recpm<-function(design,towels){
+  out<-0
+  if(any(towels==design)){return(1)}
+  ### 
+  subdes<-c()
+  for(i in 1:length(towels)){
+    lentowel<-nchar(towels[i])
+    if(towels[i]==str_sub(design,end=lentowel)){
+      subdes<-c(subdes,str_sub(design,start=(lentowel+1)))}}
+  if(length(subdes)==0){return(0)}
+  if(any(sapply(subdes,function(x){wrapper(x,towels)})==1)){return(1)}else{return(0)}}
+```
+
+
+```{r}
+forget(memrecpm)
+memrecpm<-memoise(recpm)
+```
+
+```{r}
+wrapper<-function(d,t){
+  ### remove the towels aren't in the design at all
+  tmptowels<-c()
+  for(i in 1:length(t))
+    if(str_detect(d,t[i])&&(nchar(t[i])<=nchar(d))){
+      tmptowels<-c(tmptowels,t[i])}
+  if(length(tmptowels)==0){return(0)}
+  return(memrecpm(d,tmptowels))}
+```
+
+```{r}
+part1<-sapply(designs, function(x){
+  wrapper(x,towels)})
+```
+```{r}
+sum(part1)
+```
+## Part 2 - I'm pretty sure I just count rather than "if any."  Also, I need to add that if the design is empty to the wrapper function.
+
+```{r}
+countrecpm<-function(design,towels){
+  ### 
+  subdes<-c()
+  for(i in 1:length(towels)){
+    lentowel<-nchar(towels[i])
+    if(towels[i]==str_sub(design,end=lentowel)){
+      subdes<-c(subdes,str_sub(design,start=(lentowel+1)))}}
+  if(length(subdes)==0){return(0)}
+  return(sum(sapply(subdes,function(x){countwrapper(x,towels)})))}
+```
+
+
+```{r}
+forget(countmemrecpm)
+countmemrecpm<-memoise(countrecpm)
+```
+
+
+```{r}
+countwrapper<-function(d,t){
+  if(d==""){return(1)}
+  ### remove the towels aren't in the design at all
+  tmptowels<-c()
+  for(i in 1:length(t))
+    if(str_detect(d,t[i])){
+      tmptowels<-c(tmptowels,t[i])}
+  if(length(tmptowels)==0){return(0)}
+  return(countmemrecpm(d,tmptowels))}
+```
+
+
+
+
+```{r}
+p2<-sapply(designs, function(x){
+  countwrapper(x,towels)})
+p2
+part2<-sum(p2)
+part2
+```
+771745460576799
