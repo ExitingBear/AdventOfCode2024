@@ -1,0 +1,319 @@
+---
+title: "Day 20 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+#input<-read_lines("Day20Sample.txt")
+input<-read_lines("../../AoCData/AOC2024/Day20.txt")
+
+racetrack<-dict()
+### Put valid spaces into a dictionary
+for(i in 1:length(input)){
+  x<-unlist(str_split(input[i],""))
+  for(j in 1:length(x)){
+    if(x[j]!="#"){
+      racetrack$set(str_flatten(c(i,j),"~"),0)}
+    if(x[j]=="S"){racestart<-c(i,j)}
+    if(x[j]=="E"){raceend<-c(i,j)}}}
+maxy<-length(input)
+maxx<-length(x)
+```
+
+
+## Part 1
+You'd think I'd learn by now that not everything is a search... and yet.
+
+When someone cheats through a wall, note the time they emerged from the wall - when (later) the non-cheating person passes that place, record how long it took from the moment of cheating until then.
+Tally those.
+
+```{r}
+cheatercheater<-function(trk,sy,sx,ey,ex,maxy,maxx){
+  beenthere<-dict()
+  cheattime<-dict()
+  cheatbonus<-c()
+  pq<-priority_queue()
+  ## tracing y,x,steps
+  pq$push(c(sy,sx,0),0)
+  racetime<-c()
+  while(pq$size()>0){
+    curr<-pq$pop()
+    ### been there?
+    if(beenthere$has(str_flatten(curr[1:2],"~"))){next}
+    beenthere$set(str_flatten(curr[1:2],"~"),0)
+    ### find out if this is a cheating exit
+    if(cheattime$has(str_flatten(curr[1:2],"~"))){
+      ### if so, figure out your bonus and add that to the cheatbonus list
+      cb<-curr[3]-cheattime$get(str_flatten(curr[1:2],"~"))
+      cheatbonus<-c(cheatbonus,cb)}
+    ### if at the end - return all of the cheat bonuses
+    if(all(curr[1:2]==c(ey,ex))){
+      cat(curr[3]," here\n")
+      return(cheatbonus)}
+    #### Otherwise, check all 4 directions.  In each direction,
+    ##### if there isn't a wall, go there.
+    ##### if there is a wall,  for each direction out of the wall, put the time you would have cheated to that point
+    ##up
+    if(curr[1]>1){
+      if(trk$has(str_flatten(c(curr[1]-1,curr[2]),"~"))){
+        pq$push(c(curr[1]-1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1]-1,curr[2]))))
+      }else{
+          cheattime$set(str_flatten(c(curr[1]-2,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]-2,curr[2]),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]+1),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]-1),"~"),default=c()),curr[3]+2))}}
+    ##down
+    if(curr[1]<maxy){
+      if(trk$has(str_flatten(c(curr[1]+1,curr[2]),"~"))){
+        pq$push(c(curr[1]+1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1]+1,curr[2]))))
+      }else{
+          cheattime$set(str_flatten(c(curr[1]+2,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]+2,curr[2]),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]+1),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]-1),"~"),default=c()),curr[3]+2))}}
+    ##left
+    if(curr[2]>1){
+      if(trk$has(str_flatten(c(curr[1],curr[2]-1),"~"))){
+        pq$push(c(curr[1],curr[2]-1,curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1],curr[2]-1))))
+      }else{
+          cheattime$set(str_flatten(c(curr[1],curr[2]-2),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]-2),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]-1),"~"),default=c()),curr[3]+2))
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]-1),"~"),default=c()),curr[3]+2))}}
+    ##right
+    if(curr[2]<maxx){
+      if(trk$has(str_flatten(c(curr[1],curr[2]+1),"~"))){
+        pq$push(c(curr[1],curr[2]+1,curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1],curr[2]+1))))
+      }else{
+        cheattime$set(str_flatten(c(curr[1],curr[2]+2),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]+2),"~"),default=c()),curr[3]+2))
+        cheattime$set(str_flatten(c(curr[1]-1,curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]+1),"~"),default=c()),curr[3]+2))
+        cheattime$set(str_flatten(c(curr[1]+1,curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]+1),"~"),default=c()),curr[3]+2))}}
+
+}
+racetime}
+```
+
+```{r}
+p1<-cheatercheater(racetrack,racestart[1],racestart[2],raceend[1],raceend[2],maxy,maxx)
+table(p1)
+#part1<-length(which(p1>=100))
+#part1
+```
+
+
+## Part 2
+Small change - there are two separate sets of rules, one for while you're cheating, one for the path that hasn't cheated yet.  The same idea, though - time recorded when cheating stops at the place the cheating stops.
+
+
+
+```{r}
+longcheat<-function(trk,sy,sx,ey,ex,maxy,maxx){
+  beenthere<-dict()
+  cheattime<-dict()
+  cheatpath<-dict()
+  cheatbonus<-c()
+  pq<-priority_queue()
+  ## tracing y,x,cheatstart,cheatstop,cheatsteps,steps
+  pq$push(c(sy,sx,-100,-100,0,0),0)
+  racetime<-c()
+  while(pq$size()>0){
+    curr<-pq$pop()
+    #### if been cheating too long, stop
+    if(curr[5]>19){next}
+    ### been there
+    if(beenthere$has(str_flatten(curr[1:4],"~"))){next}
+    beenthere$set(str_flatten(curr[1:4],"~"),0)
+    ### if you have not cheated yet
+    if(curr[3]==-100){
+      #### find out if this is a space that gets cheated to
+      if(cheattime$has(str_flatten(curr[1:2],"~"))){
+        ### if so, figure out the bonus and add that to the cheatbonus list
+        cb<-curr[6]-cheattime$get(str_flatten(curr[1:2],"~"))
+        cheatbonus<-c(cheatbonus,cb)}
+      ### if at the end - return all of the cheat bonuses
+      if(all(curr[1:2]==c(ey,ex))){
+        return(cheatbonus)}
+      #### Otherwise, check all 4 directions.  In each direction,
+      ##### start cheating in that direction.
+      ##### also, with no wall, go there without cheating.
+      ##up
+      if(curr[1]>1){
+        if(trk$has(str_flatten(c(curr[1]-1,curr[2]),"~"))){
+          pq$push(c(curr[1]-1,curr[2],-100,-100,0,curr[6]+1),-curr[6])}
+          pq$push(c(curr[1]-1,curr[2],curr[1],curr[2],1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),"~"),default=c()),curr[6]+1))
+          }
+      ##down
+      if(curr[1]<maxy){
+        if(trk$has(str_flatten(c(curr[1]+1,curr[2]),"~"))){
+          pq$push(c(curr[1]+1,curr[2],-100,-100,0,curr[6]+1),-curr[6])}
+          pq$push(c(curr[1]+1,curr[2],curr[1],curr[2],1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),"~"),default=c()),curr[6]+1))
+          }
+      ##left
+      if(curr[2]>1){
+        if(trk$has(str_flatten(c(curr[1],curr[2]-1),"~"))){
+          pq$push(c(curr[1],curr[2]-1,-100,-100,0,curr[6]+1),-curr[6])}
+          pq$push(c(curr[1],curr[2]-1,curr[1],curr[2],1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),"~"),default=c()),curr[6]+1))
+      }
+      ##right
+      if(curr[2]<maxx){
+        if(trk$has(str_flatten(c(curr[1],curr[2]+1),"~"))){
+          pq$push(c(curr[1],curr[2]+1,-100,-100,0,curr[6]+1),-curr[6])}
+          pq$push(c(curr[1],curr[2]+1,curr[1],curr[2],1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),"~"),default=c()),curr[6]+1))
+          }
+      ### if you are cheating, check to see if over 20 steps. If so, too many, stop
+      ### In each direction, add to the cheattime ledger *and* keepgoing
+    }else{
+      if(curr[1]>1){
+        if(!cheatpath$has(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1]-1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),"~"),default=c()),curr[6]+1))}}
+      ### down
+      if(curr[1]<maxy){
+        if(!cheatpath$has(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1]+1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),"~"),default=c()),curr[6]+1))}}
+      ### left
+      if(curr[2]>1){
+        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1],curr[2]-1,curr[3],curr[4],curr[5]+1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),"~"),default=c()),curr[6]+1))}}
+      ### right
+      if(curr[2]<maxx){
+        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1],curr[2]+1,curr[3],curr[4],curr[5]+1,curr[6]+1),-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),"~"),default=c()),curr[6]+1))}}
+    }
+  }# closing while
+}
+```
+
+```{r}
+p2<-longcheat(racetrack,racestart[1],racestart[2],raceend[1],raceend[2],maxy,maxx)
+part2<-length(which(p2>=100))
+part2
+```
+1110467 is too high
+982124 is it... YIKES
+
+
+maybe?
+
+```{r}
+longcheat<-function(trk,sy,sx,ey,ex,maxy,maxx){
+  beenthere<-dict()
+  cheattime<-dict()
+  cheatpath<-dict()
+  cheatbonus<-c()
+  pq<-priority_queue()
+  ## tracing y,x,cheatstart,cheatstop,cheatsteps,steps
+  pq$push(c(sy,sx,-100,-100,0,0),0)
+  racetime<-c()
+  while(pq$size()>0){
+    curr<-pq$pop()
+    #### if been cheating too long, stop
+    if(curr[5]>19){next}
+    ### been there
+    if(beenthere$has(str_flatten(curr[1:4],"~"))){next}
+    beenthere$set(str_flatten(curr[1:4],"~"),0)
+    ### if you have not cheated yet
+    if(curr[3]==-100){
+      #### find out if this is a space that gets cheated to
+      if(cheattime$has(str_flatten(curr[1:2],"~"))){
+        ### if so, figure out the bonus and add that to the cheatbonus list
+        cb<-curr[6]-cheattime$get(str_flatten(curr[1:2],"~"))
+        cheatbonus<-c(cheatbonus,cb)}
+      ### if at the end - return all of the cheat bonuses
+      if(all(curr[1:2]==c(ey,ex))){
+        return(cheatbonus)}
+      #### Otherwise, check all 4 directions.  In each direction,
+      ##### start cheating in that direction.
+      ##### also, with no wall, go there without cheating.
+      ##up
+      if(curr[1]>1){
+        if(trk$has(str_flatten(c(curr[1]-1,curr[2]),"~"))){
+          pq$push(c(curr[1]-1,curr[2],-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1]-1,curr[2]))))}
+          pq$push(c(curr[1]-1,curr[2],curr[1],curr[2],1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),"~"),default=c()),curr[6]+1))
+          }
+      ##down
+      if(curr[1]<maxy){
+        if(trk$has(str_flatten(c(curr[1]+1,curr[2]),"~"))){
+          pq$push(c(curr[1]+1,curr[2],-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1]+1,curr[2]))))}
+          pq$push(c(curr[1]+1,curr[2],curr[1],curr[2],1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),"~"),default=c()),curr[6]+1))
+          }
+      ##left
+      if(curr[2]>1){
+        if(trk$has(str_flatten(c(curr[1],curr[2]-1),"~"))){
+          pq$push(c(curr[1],curr[2]-1,-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1],curr[2]-1))))}
+          pq$push(c(curr[1],curr[2]-1,curr[1],curr[2],1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),"~"),default=c()),curr[6]+1))
+      }
+      ##right
+      if(curr[2]<maxx){
+        if(trk$has(str_flatten(c(curr[1],curr[2]+1),"~"))){
+          pq$push(c(curr[1],curr[2]+1,-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1],curr[2]+1))))}
+          pq$push(c(curr[1],curr[2]+1,curr[1],curr[2],1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[1],curr[2]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),"~"),default=c()),curr[6]+1))
+          }
+      ### if you are cheating, check to see if over 20 steps. If so, too many, stop
+      ### In each direction, add to the cheattime ledger *and* keepgoing
+    }else{
+      if(curr[1]>1){
+        if(!cheatpath$has(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1]-1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),"~"),default=c()),curr[6]+1))}}
+      ### down
+      if(curr[1]<maxy){
+        if(!cheatpath$has(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1]+1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),"~"),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),"~"),default=c()),curr[6]+1))}}
+      ### left
+      if(curr[2]>1){
+        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1],curr[2]-1,curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]-1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),"~"),default=c()),curr[6]+1))}}
+      ### right
+      if(curr[2]<maxx){
+        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),"~"))){
+          pq$push(c(curr[1],curr[2]+1,curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
+          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),"~"),0)
+          cheattime$set(str_flatten(c(curr[1],curr[2]+1),"~"),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),"~"),default=c()),curr[6]+1))}}
+    }
+  }# closing while
+}
+```
+
+```{r}
+p2<-longcheat(racetrack,racestart[1],racestart[2],raceend[1],raceend[2],maxy,maxx)
+part2<-length(which(p2>=100))
+part2
+```
