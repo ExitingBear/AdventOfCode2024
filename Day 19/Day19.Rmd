@@ -27,86 +27,93 @@ for(i in 3:length(input)){designs<-c(designs,input[i])}
 
 ## Part 1
 
+It's recursive function with memoisation time.
 
+recpm() takes in the towel & design - returns 1 if the design matches, 0 if it can't.
 ```{r}
 recpm<-function(design,towels){
-  out<-0
+  ### if there is a match, return match
   if(any(towels==design)){return(1)}
   ### 
   subdes<-c()
+  ### check the design against all of the towels
+  ### if a towel matches the beginning of the design, put the remainder of the design in a list
   for(i in 1:length(towels)){
     lentowel<-nchar(towels[i])
     if(towels[i]==str_sub(design,end=lentowel)){
       subdes<-c(subdes,str_sub(design,start=(lentowel+1)))}}
+  ### if no towels match the front of the design, this is impossible
   if(length(subdes)==0){return(0)}
-  if(any(sapply(subdes,function(x){wrapper(x,towels)})==1)){return(1)}else{return(0)}}
-```
+  ### if any do, check the sub designs to see if any of them match
+  if(any(sapply(subdes,function(x){towellayout(x,towels)})==1)){return(1)}else{return(0)}}
 
-
-```{r}
-forget(memrecpm)
+### memoise this because there are far too many.
 memrecpm<-memoise(recpm)
 ```
 
+
+
 ```{r}
-wrapper<-function(d,t){
+towellayout<-function(d,t){
   ### remove the towels aren't in the design at all
   tmptowels<-c()
   for(i in 1:length(t))
     if(str_detect(d,t[i])&&(nchar(t[i])<=nchar(d))){
       tmptowels<-c(tmptowels,t[i])}
+  ### if none of the towels are anywhere in the design, return 0
   if(length(tmptowels)==0){return(0)}
+  ### otherwise - start checking to see if any of them match the beginning of the design.
   return(memrecpm(d,tmptowels))}
 ```
 
 ```{r}
+### run this against all of the designs and add them for the answer.
 part1<-sapply(designs, function(x){
-  wrapper(x,towels)})
-```
-```{r}
+  towellayout(x,towels)})
+
 sum(part1)
 ```
-## Part 2 - I'm pretty sure I just count rather than "if any."  Also, I need to add that if the design is empty to the wrapper function.
+## Part 2
+
+This counts rather than just goes for yes/no. 
 
 ```{r}
 countrecpm<-function(design,towels){
-  ### 
+  ### start checking the front of the designs against all of the towels
   subdes<-c()
   for(i in 1:length(towels)){
     lentowel<-nchar(towels[i])
     if(towels[i]==str_sub(design,end=lentowel)){
       subdes<-c(subdes,str_sub(design,start=(lentowel+1)))}}
+  ### again if nothing matches, return 0
   if(length(subdes)==0){return(0)}
-  return(sum(sapply(subdes,function(x){countwrapper(x,towels)})))}
-```
+  ### if something does, return the sum of the matches.
+  return(sum(sapply(subdes,function(x){totaltowels(x,towels)})))}
 
-
-```{r}
-forget(countmemrecpm)
+### memoise this because there are far too many.
 countmemrecpm<-memoise(countrecpm)
 ```
 
 
 ```{r}
-countwrapper<-function(d,t){
+totaltowels<-function(d,t){
   if(d==""){return(1)}
   ### remove the towels aren't in the design at all
   tmptowels<-c()
   for(i in 1:length(t))
     if(str_detect(d,t[i])){
       tmptowels<-c(tmptowels,t[i])}
+  
   if(length(tmptowels)==0){return(0)}
   return(countmemrecpm(d,tmptowels))}
 ```
 
 
-
-
 ```{r}
+
+### run against all of the designs and add them for the answer.
 p2<-sapply(designs, function(x){
-  countwrapper(x,towels)})
-p2
+  totaltowels(x,towels)})
 part2<-sum(p2)
 part2
 ```
-771745460576799
