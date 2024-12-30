@@ -26,7 +26,9 @@
 <!-- 
 | 21 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-21.nb.html) | [Notebook](<Day 21/Day21.Rmd>) | [Files](<Day 21>) |
 | 22 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-22.nb.html) | [Notebook](<Day 22/Day22.Rmd>) | [Files](<Day 22>) |
-| 23 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-23.nb.html) | [Notebook](<Day 23/Day23.Rmd>) | [Files](<Day 23>) |
+ -->
+| 23 | *LAN Party* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-23.nb.html) | [Notebook](<Day 23/Day23.Rmd>) | [Files](<Day 23>) |
+<!-- 
 | 24 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-24.nb.html) | [Notebook](<Day 24/Day24.Rmd>) | [Files](<Day 24>) |
 | 25 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-25.nb.html) | [Notebook](<Day 25/Day25.Rmd>) | [Files](<Day 25>) |
  -->
