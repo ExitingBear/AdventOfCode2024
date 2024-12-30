@@ -22,9 +22,8 @@
 | 17 | *Chronospatial Computer* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-17.nb.html) | [Notebook](<Day 17/Day17.Rmd>) | [Files](<Day 17>) |
 | 18 | *RAM Run* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-18.nb.html) | [Notebook](<Day 18/Day18.Rmd>) | [Files](<Day 18>) |
 | 19 | *Linen Layout* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-19.nb.html) | [Notebook](<Day 19/Day19.Rmd>) | [Files](<Day 19>) |
+| 20 | *Race Condition* | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-20.nb.html) | [Notebook](<Day 20/Day20.Rmd>) | [Files](<Day 20>) |
 <!-- 
-
-| 20 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-20.nb.html) | [Notebook](<Day 20/Day20.Rmd>) | [Files](<Day 20>) |
 | 21 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-21.nb.html) | [Notebook](<Day 21/Day21.Rmd>) | [Files](<Day 21>) |
 | 22 | ** | [HTML](https://exitingbear.github.io/AdventOfCode2024/Day-22.nb.html) | [Notebook](<Day 22/Day22.Rmd>) | [Files](<Day 22>) |
  -->
