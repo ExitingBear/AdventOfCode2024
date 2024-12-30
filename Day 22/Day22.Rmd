@@ -1,0 +1,139 @@
+---
+title: "Day 22 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+```{r}
+input<-read_lines("Day22Sample.txt")
+input<-as.numeric(input)
+```
+
+I will need a replacement for bitwise xor.
+
+```{r}
+xorbit<-function(a,b){
+  if(a<2^31&&b<2^31){return(bitwXor(a,b))
+  }else{return(bitwXor(a%%2^31,b%%2^31)+(2^31*bitwXor(a%/%2^31,b%/%2^31)))}}
+```
+
+Quick definition of nextsecret() to find the next secret number
+
+```{r}
+nextsecret<-function(x){
+  ### multiply by 64 and mix and prune
+  x<-xorbit(x,64*x)%%16777216
+  ### div by 32 and mix and prune
+  x<-xorbit(x,x%/%32)%%16777216
+  ### div by 32 and mix and prune
+  x<-xorbit(x,x*2048)%%16777216
+x}
+```
+
+And this repeats it n times.
+
+```{r}
+nthsecret<-function(x,n){
+  while(n>0){
+    x<-nextsecret(x)
+    n<-n-1}
+  x}
+```
+
+Run 2000 times to find p1
+
+```{r}
+p1<-sapply(input,function(x){
+  nthsecret(x,2000)})
+part1<-sum(p1)
+part1
+```
+### Part 2
+
+bananas finds the number of bananas
+
+```{r}
+### not expecting to save a lot of time, but maybe
+bananas<-function(sn,reps){
+  ### in order to keep this rotating through - start with "Inf, Inf, Inf, Inf" as the vector
+  chng<-c(Inf,Inf,Inf,Inf)
+  ### find the ones digit for the secret number
+  ones<-sn%%10
+  beenthere<-dict()
+  ### create "ledger" as the place where the sequence and its corresponding ones digit will be recorded
+  ledger<-as.data.frame(matrix(ncol=5,nrow=0))
+  ### cycle through 
+  for(i in 1:reps){
+    sn<-nextsecret(sn)
+    nextone<-sn%%10
+    ### get the next secret and the next ones digit
+    chng<-c(chng[-1],(nextone-ones))
+    ### rotate the vector
+    ones<-nextone
+    ### check to see if that sequence has been there before.  If not, then add it to the ledger.
+    if(!beenthere$has(chng)){
+      beenthere$set(chng,0)
+      ledger<-rbind(ledger,c(chng,ones))}}
+  ### return the ledger
+  ledger}
+```
+
+```{r}
+a<-bananas(1,2000)
+b<-bananas(2,2000)
+c<-bananas(3,2000)
+d<-bananas(2024,2000)
+```
+
+
+```{r}
+colnames(a)<-c("c1","c2","c3","c4","o")
+colnames(b)<-c("c1","c2","c3","c4","o")
+colnames(c)<-c("c1","c2","c3","c4","o")
+colnames(d)<-c("c1","c2","c3","c4","o")
+example<-rbind(a,b,c,d)
+```
+
+```{r}
+example<-example%>%rowwise%>%mutate(chlist=str_flatten(c(c1,c2,c3,c4),"~"))
+```
+
+```{r}
+grex<-example%>%group_by(chlist)%>%summarise(allbananas=sum(o))
+max(grex$allbananas)
+```
+
+This runs bananas for all of the inputs, groups together all of the ledgers, and then finds the maximums.
+It batches in groups of 100 so the megaledger doesn't get too big.
+```{r,eval=FALSE}
+pp2<-as.data.frame(matrix(ncol=2,nrow=0))
+colnames(pp2)<-c("chlist","allbananas")
+for(k in 0:19){
+  p2<-as.data.frame(matrix(ncol=5,nrow=0))
+  colnames(p2)<-c("c1","c2","c3","c4","o")
+  q<-
+  for(i in 1:100){
+    a<-bananas(input[100*k+i],2000)
+    colnames(a)<-c("c1","c2","c3","c4","o")
+    p2<-rbind(p2,a)
+    colnames(p2)<-c("c1","c2","c3","c4","o")}
+  p2<-p2%>%rowwise%>%mutate(chlist=str_flatten(c(c1,c2,c3,c4),"~"))%>%
+    group_by(chlist)%>%summarise(allbananas=sum(o))
+  pp2<-rbind(pp2,p2)
+  pp2<-pp2%>%group_by(chlist)%>%summarise(allbananas=sum(allbananas))}
+
+part2<-max(pp2$allbananas)
+part2
+```
+
