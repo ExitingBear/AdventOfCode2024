@@ -1,0 +1,277 @@
+---
+title: "Day 21 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(memoise)
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+
+So, it goes
+depressurized robot > radiation robot > frozen robot > me
+
+## Part 1
+These are the dictionaries to show how to get from one key to another - starting with the digital keypad
+Assuming it will always, always be faster to hit the same button twice than to come back to it later
+
+```{r}
+d2d<-dict()
+d2d$set("^^","A")
+d2d$set("^<","v<A")
+d2d$set("^>",c("v>A",">vA"))
+d2d$set("^v","vA")
+d2d$set("^A",">A")
+d2d$set("<^",">^A")
+d2d$set("<<","A")
+d2d$set("<>",">>A")
+d2d$set("<v",">A")
+d2d$set("<A",">>^A")
+d2d$set(">^",c("<^A","^<A"))
+d2d$set("><","<<A")
+d2d$set(">>","A")
+d2d$set(">v","<A")
+d2d$set(">A","^A")
+d2d$set("v^","^A")
+d2d$set("v<","<A")
+d2d$set("v>",">A")
+d2d$set("vv","A")
+d2d$set("vA",c(">^A","^>A"))
+d2d$set("A^","<A")
+d2d$set("A<","v<<A")
+d2d$set("A>","vA")
+d2d$set("Av",c("v<A","<vA"))
+d2d$set("AA","A")
+```
+
+
+And this is for the numeric keypad.  If it is in here, it is in my data or one of the sample/test data sets.
+
+```{r}
+d2n<-dict()
+d2n$set("02","^A")
+d2n$set("05","^^A")
+d2n$set("08","^^^A")
+d2n$set("0A",">A")
+d2n$set("13",">>A")
+d2n$set("15",c("^>A",">^A"))
+d2n$set("17","^^A")
+d2n$set("1A",c(">>vA"))
+d2n$set("1A",c(">>vA"))
+d2n$set("29",c(">^^A","^^>A"))
+d2n$set("3A","vA")
+d2n$set("37",c("^^<<A","<<^^A"))
+d2n$set("45",">A")
+d2n$set("4A",">>vvA")
+d2n$set("56",">A")
+d2n$set("59",c("^>A",">^A"))
+d2n$set("5A",c("vv>A",">vvA"))
+d2n$set("61",c("v<<A","<<vA"))
+d2n$set("64","<<A")
+d2n$set("67",c("^<<A","<<^A"))
+d2n$set("68",c("^<A","<^A"))
+d2n$set("6A","vvA")
+d2n$set("71","vvA")
+d2n$set("75",c("v>A",">vA"))
+d2n$set("79",">>A")
+d2n$set("80","vvvA")
+d2n$set("89",">A")
+d2n$set("8A",c("vvv>A",">vvvA"))
+d2n$set("94",c("<<vA","v<<A"))
+d2n$set("96","vA")
+d2n$set("98","<A")
+d2n$set("9A","vvvA")
+d2n$set("A0",c("<A"))
+d2n$set("A1","^<<A")
+d2n$set("A3","^A")
+d2n$set("A2",c("^<A","<^A"))
+d2n$set("A4","^^<<A")
+d2n$set("A6","^^A")
+d2n$set("A8",c("^^^<A","<^^^A"))
+d2n$set("A9","^^^A")
+```
+
+
+First, find all the possible paths for the depressurized robot - because all of these are the same length, this should just grab the info
+
+```{r}
+nopressure<-function(numberpad,code){
+  #initialize the code with "A"
+  code<-str_c("A",code)
+  q<-queue()
+  out<-c()
+  q$push(c(code,""))
+  while(q$size()>0){
+    cde<-q$pop()
+    #### if no more characters, enter the directional keypad sequence into out
+    if(nchar(cde[1])==1){
+      out<-c(out,cde[2])
+      next}
+    ### otherwise, use the dictionary to find sequences
+    x<-numberpad$get(str_sub(cde[1],end=2))
+    ### for each possible path in the dictionary,
+    ### push the code without the first character and add the moves to the end of the sequence of moves 
+    for(i in 1:length(x)){
+      q$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i])))}}
+out}
+
+
+```
+
+
+
+```{r}
+r1<-nopressure(d2n,"029A")
+r1
+```
+Then find the path for the radiation robots
+
+```{r}
+radiation<-function(dpad,codes){
+  q<-queue()
+  #### smallest length
+  shortest<-Inf
+  smallest<-list()
+  for(i in 1:length(codes)){
+    x<-codes[i]
+    ### pushing the current, the output, and the starting
+    q$push(c(str_c("A",x),"",x))}
+    while(q$size()>0){
+      cde<-q$pop()
+      ### check to see if this has worked its way through the sequence
+      if(nchar(cde[1])==1){
+        ### if this is the shortest, update everything
+        if(nchar(cde[2])<shortest){
+          shortest<-nchar(cde[2])
+          smallest<-list(cde[2:3])
+          ### if it is the same length as the shortest - keep it
+        }else if(nchar(cde[2])==shortest){
+          smallest<-c(smallest,list(cde[2:3]))}
+        next}
+      #### otherwise, start constructing the 
+      x<-dpad$get(str_sub(cde[1],end=2))
+      ### for each possible path in the dictionary,
+      ### push the code without the first character and add the moves to the end of the sequence of moves 
+      for(i in 1:length(x)){
+        q$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i]),cde[3]))}}     
+    smallest}
+```
+
+
+```{r}
+r2<-radiation(d2d,r1)
+```
+Then find the paths for the frozen robots (The assumption is that the shorter the path earlier, the shorter the path later)
+
+```{r}
+frozen<-function(dpad,codes){
+  pq<-priority_queue()
+  #### smallest length
+  shortest<-Inf
+  smallest<-list()
+  for(i in 1:length(codes)){
+    x<-codes[[i]]
+    ### pushing the current, the output, and the 
+    pq$push(c(str_c("A",x[1]),"",x[1:2]),-nchar(x[1]))}
+    while(pq$size()>0){
+      cde<-pq$pop()
+      ### check to see if this has worked its way through the sequence
+      if(nchar(cde[2])>shortest){next}
+      if(nchar(cde[1])==1){
+        ### if this is the shortest, update everything
+        if(nchar(cde[2])<shortest){
+          shortest<-nchar(cde[2])
+          smallest<-list(cde[-1])
+          ### if it is the same length as the shortest - keep it
+        }else if(nchar(cde[2])==shortest){
+          smallest<-c(smallest,list(cde[-1]))}
+        next}
+      #### otherwise, start constructing the 
+      x<-dpad$get(str_sub(cde[1],end=2))
+      ### for each possible path in the dictionary,
+      ### push the code without the first character and add the moves to the end of the sequence of moves 
+      for(i in 1:length(x)){
+        pq$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i]),cde[-c(1:2)]),-(nchar(cde[1])+nchar(cde[2])+nchar(x[i])))}}     
+    shortest}
+```
+
+
+```{r}
+r3<-frozen(d2d,r2)
+r3
+```
+For part 1, run through each function and then multiply by the numerical values in the initial code.
+
+```{r}
+part1<-sapply(c("029A","980A","179A","456A","379A"),function(x){
+  r1<-nopressure(d2n,x)
+  r2<-radiation(d2d,r1)
+  r3<-frozen(d2d,r2)
+  nums<-as.numeric(str_flatten(unlist(str_extract_all(x,"[:digit:]"))))
+  cplx<-r3*nums
+  cat(x,"-",length(r1),"-",length(r2),"-",r3,"-",cplx,"\n")
+  cplx})
+sum(part1)
+```
+
+### Part 2
+
+Obviously this is too much to do 26 times.  So recursively
+
+
+```{r}
+findshortest<-function(longcode,dct,rep){
+  ####if the only code is "A" return 0 
+  if(longcode=="A"){return(0)
+    ### if there are only two characters, return the number of keys you need to press to get from that character to the next
+  }else if(nchar(longcode)==2){
+    return(memdbl(longcode,dct,rep))
+    ### otherwise, return the sum of the first two characters and the number of keys to press for the remainder of the string. 
+  }else{
+    return(sum(memdbl(str_sub(longcode,end=2),dct,rep),
+               findshortest(str_sub(longcode,start=2)
+                            ,dct
+                            ,rep)))}}
+
+dblshort<-function(pr,dct,rep){
+  ### if this is the final repeat, return the number of characters for that key sequence
+  if(rep==1){
+    return(min(nchar(dct$get(pr))))
+  }else{
+    ### otherwise, get all of the options for that key sequence
+    ### for each of them, run findshortest() with one fewer repeat
+    ### take the minimum.
+    return(min(sapply(dct$get(pr),function(x){findshortest(str_c("A",x),dct,rep-1)})))}}
+
+### memoise dbleshort - because otherwise this takes too long
+memdbl<-memoise(dblshort)
+
+```
+
+With that in place, use those, plus the nopressure() from above (for the digital keypad) and multiply it by the numeric value.
+
+```{r}
+howcomplex<-function(code,ndict,ddict,reps){
+  ### first find how the depressurized robot needs to move and 
+  pressureless<-str_c("A",nopressure(ndict,code))
+  fewestpresses<-min(sapply(pressureless,function(x){findshortest(x,ddict,reps)}))
+  nums<-as.numeric(str_flatten(unlist(str_extract_all(code,"[:digit:]"))))
+  fewestpresses*nums}
+```
+
+
+```{r}
+p2<-sapply(c("029A","980A","179A","456A","379A"),function(x){howcomplex(x,d2n,d2d,25)})
+part2<-sum(p2)
+part2
+```
+
