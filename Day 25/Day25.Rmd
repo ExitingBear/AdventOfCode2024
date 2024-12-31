@@ -1,0 +1,56 @@
+---
+title: "Day 25 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+
+```{r}
+input<-read_lines("Day25Sample.txt")
+bl<-c(0,which(input==""),length(input)+1)
+```
+
+
+Read in the locks & keys to just their heights.
+Append a 1 to the front if it's a key and 0 to the front if it's a lock.
+
+```{r}
+lkms<-list()
+for(i in 2:length(bl)){
+  ### create the matrix knowing there are 5 pins
+  m<-matrix(ncol=5,nrow=bl[i]-bl[i-1]-1)
+  for(j in (bl[i-1]+1):(bl[i]-1)){
+    m[j-(bl[i-1]),]<-unlist(str_split(input[j],""))}
+  ### get the lengths of the heights
+  lk<-sapply(1:5,function(x){length(which(m[,x]=="#"))-1})
+  ### mark whether it's a lock (0) or key (1)
+  if(any(m[1,]=="#")){lk<-c(0,lk)}else{lk<-c(1,lk)}
+  lkms<-c(lkms,list(lk))}
+```
+
+Compare all locks & keys
+
+
+```{r}
+matches<-0
+### just compare all the way through
+for(i in 1:(length(lkms)-1)){
+  for(j in (i+1):length(lkms)){
+    ### if this is a lock & a key
+    if(lkms[[i]][1]!=lkms[[j]][1]){
+      ### then check to make sure that they fit by checking they add to less than 5 
+      if(all(lkms[[i]]+lkms[[j]]<=5)){matches<-matches+1}}}}
+matches
+```
+

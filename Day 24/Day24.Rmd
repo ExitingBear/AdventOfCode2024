@@ -1,0 +1,357 @@
+---
+title: "Day 24 Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(igraph)
+library(ggplot2)
+library(ggraph)
+library(reshape2)
+library(knitr)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(readr)
+library(collections)
+options(scipen = 999)
+```
+
+
+This reads the starting values into a dictionary and then the gates into a list. Each gate is a vector in the format c(wire1, operator, wire2, wire3).  I also get the highest z value.
+
+```{r}
+input<-read_lines("Day24Sample2.txt")
+
+### the values are in a dictionary
+wirevalues<-dict()
+### the gates/rules are in a list
+gates<-list()
+highz<- -Inf
+blank<-which(input=="")
+xvals<-c()
+yvals<-c()
+for(i in 1:(blank-1)){
+  x<-unlist(str_split(input[i],": "))
+  wirevalues$set(x[1],as.numeric(x[2]))
+  if(str_starts(x[1],"x")){xvals[as.numeric(str_sub(x[1],start=2))+1]<-as.numeric(x[2])}
+  if(str_starts(x[1],"y")){yvals[as.numeric(str_sub(x[1],start=2))+1]<-as.numeric(x[2])}}
+for(i in (blank+1):length(input)){
+    x<-unlist(str_split(input[i]," "))[c(1:3,5)]
+    ### look for the highest z
+    if(str_starts(x[1],"z")){highz<-max(highz,as.numeric(str_sub(x[1],start=2)))}
+    if(str_starts(x[3],"z")){highz<-max(highz,as.numeric(str_sub(x[3],start=2)))}
+    if(str_starts(x[4],"z")){highz<-max(highz,as.numeric(str_sub(x[4],start=2)))}
+    gates<-c(gates,list(x))}
+```
+
+
+## Part 1
+
+This simply runs through all of the available rules again and again until there's a value for every z.
+
+```{r}
+getzs<-function(wv,g,hz){
+  ### get the out vector
+  zvals<-rep(5,hz+1)
+  ### while any of the zs don't have values yet, 
+  while(any(zvals==5)){
+    i<-1
+    ### run through the gates
+    while(i<=length(g)){
+      wire<-g[[i]]
+      if(wv$has(wire[1])&&wv$has(wire[3])){
+      otpt<-switch(wire[2],
+             "AND"={(wv$get(wire[1])&&wv$get(wire[3]))},
+             "OR"={(wv$get(wire[1])||wv$get(wire[3]))},
+             "XOR"={(xor(wv$get(wire[1]),wv$get(wire[3])))},
+             {cat("unknown\n",unlist(wire),"\n")})
+        ### set the gate
+        wv$set(wire[4],otpt)
+        ### if the output wire is something that begins with z, update the zvector
+        otpt<-as.numeric(otpt)
+        if(str_starts(wire[4],"z")){zvals[as.numeric(str_sub(wire[4],start=2))+1]<-otpt}
+        ### get rid of that instruction
+        g<-g[-i]
+      }else{i<-i+1}}}
+  zdigits<-0
+  ### translates z from binary to dec
+  for(i in length(zvals):1){
+    zdigits<-2*zdigits+zvals[i]}
+list(zvals,zdigits)}
+```
+
+```{r}
+p1<-getzs(wirevalues,gates,highz)
+part1<-p1[[2]]
+part1
+```
+
+## Part 2
+
+Using my actual data, but input the same way.  Also creates x, y, and x+y in decimal form
+
+```{r, echo=FALSE,}
+input<-read_lines("../../AoCData/AOC2024/Day24.txt")
+
+### the values are in a dictionary
+wirevalues<-dict()
+### the gates/rules are in a list
+gates<-list()
+highz<- -Inf
+blank<-which(input=="")
+xvals<-c()
+yvals<-c()
+for(i in 1:(blank-1)){
+  x<-unlist(str_split(input[i],": "))
+  wirevalues$set(x[1],as.numeric(x[2]))
+  if(str_starts(x[1],"x")){xvals[as.numeric(str_sub(x[1],start=2))+1]<-as.numeric(x[2])}
+  if(str_starts(x[1],"y")){yvals[as.numeric(str_sub(x[1],start=2))+1]<-as.numeric(x[2])}}
+for(i in (blank+1):length(input)){
+    x<-unlist(str_split(input[i]," "))[c(1:3,5)]
+    ### look for the highest z
+    if(str_starts(x[1],"z")){highz<-max(highz,as.numeric(str_sub(x[1],start=2)))}
+    if(str_starts(x[3],"z")){highz<-max(highz,as.numeric(str_sub(x[3],start=2)))}
+    if(str_starts(x[4],"z")){highz<-max(highz,as.numeric(str_sub(x[4],start=2)))}
+    gates<-c(gates,list(x))}
+
+actualzs<-getzs(wirevalues,gates,highz)
+zvals<-actualzs[[1]]
+zdec<-actualzs[[2]]
+### x in decimal form
+xdec<-0
+  for(i in length(xvals):1){
+    xdec<-2*xdec+xvals[i]}
+### y in decimal form
+ydec<-0
+  for(i in length(yvals):1){
+    ydec<-2*ydec+yvals[i]}
+x_plus_y<-xdec+ydec
+ph<-xdec+ydec
+x_plus_y_bin<-c()
+while(ph>0){
+  x_plus_y_bin<-c(x_plus_y_bin,ph%%2)
+  ph<-ph%/%2}
+```
+Put all the gates into a dataframe, because I find them easier to look through than lists
+```{r}
+gatesdf<-as.data.frame(matrix(nrow=0,ncol=4))
+for(i in 1:length(gates)){gatesdf<-rbind(gatesdf,gates[[i]])}
+colnames(gatesdf)<-c("a","op","b","c")
+```
+
+
+This shows the values of x, y, x+y and z followed by a graph.
+
+If x+y = z and the graph isn't wonky, the gates and wires are correct.
+This function adds x & y and shows the gates in graphical form
+```{r,echo=FALSE,warning=FALSE}
+cat("x=",xdec,"\n")
+cat("y=",ydec,"\n")
+cat("x+y=",x_plus_y,"\n")
+cat("z=",zdec,"\n")
+
+knitr::kable(rbind(0:45,xs=c(xvals,0),ys=c(yvals,0),added=c(x_plus_y_bin),zs=zvals))
+
+
+
+
+#### graph of the gates
+gatemat<-matrix(ncol=2,nrow=0)
+for(i in 1:length(gates)){
+  g<-gates[[i]]
+  gatemat<-rbind(gatemat,c(g[1],g[4]),c(g[3],g[4]))}
+gategraph<-graph_from_edgelist(gatemat)
+ea<-c()
+for(i in 1:length(gates)){ea<-c(ea,gates[[i]][2],gates[[i]][2])}
+edge_attr(gategraph)<-list(op=ea)
+gategraphplot<-ggraph(gategraph,layout="mds")+
+  geom_edge_fan(aes(color=op),
+                arrow=arrow(length= unit(1.5, 'mm')))+
+  geom_node_label(aes(label=name),size=1.5,repel=TRUE)
+gategraphplot
+```
+
+The added numbers show an issue around 6.
+The graph shows issues around 6, around 11, around 15/16, and around 36
+
+
+We can also look at the gates in a slightly different form 
+
+```{r}
+gatecheck<-function(){
+
+### get lists of all of the different gates
+xorvec<-which(gatesdf$op=="XOR")
+orvec<-which(gatesdf$op=="OR")
+andvec<-which(gatesdf$op=="AND")
+
+### show progression
+allxors<-c()
+
+for(i in 0:44){
+  ### start with the xNN from 0 to 44
+  targetx<-str_c("x",str_pad(i,2,pad=0))
+  ### find the gate which combines x & y
+  findxy<-c(which(gatesdf$a==targetx),which(gatesdf$b==targetx))
+  findxy1<-intersect(findxy,xorvec)
+  findxy2<-intersect(findxy,andvec)
+  ### show the xor for x&y
+  cat(unlist(gatesdf[findxy1,]))
+  ### show what it leads to - for everything but x00
+  if(i>0){
+      ### find the first carry
+    xxory<-gatesdf$c[findxy1]
+    carry<-c(which(gatesdf$a==xxory),which(gatesdf$b==xxory))
+    carry1<-intersect(carry,xorvec)
+    cat(" -> ",unlist(gatesdf[carry1,]))
+    ### find the second carry
+    carry2<-intersect(carry,andvec)
+    cat(" // ",unlist(gatesdf[carry2,]))
+    ### find the third carry
+    targetor<-gatesdf$c[carry2]
+    carry3<-c(which(gatesdf$a==targetor),which(gatesdf$b==targetor))
+    carry3<-intersect(carry3,orvec)
+    cat(" -> ",unlist(gatesdf[carry3,]))
+}
+  cat("\n")
+  if(i>0){cat("\t\t\t\t\t")}
+  cat(unlist(gatesdf[findxy2,]),"->\n")
+  if(i>0){cat("\n")}
+  }
+}
+gatecheck()
+
+```
+
+From that:
+
+* the outwire from column 1 goes into column 2 and 3.  
+* the outwire from column 2 should be zNN
+* the outwires from column 3 should be inputs for column 4
+* the outwire from column 4 should be inputs for column 2
+
+And also from that:
+
+* z06 & vwr should be switched
+* z11 & tqm should be switched
+* z16 & kfs should be switched
+
+Something is going on with x36/y36/z36, but it is not as clear as the others.  So starting with the easy to find wires:
+
+
+```{r}
+gateswitcher<-function(a,b,gts){
+  for(i in 1:length(gts)){
+    if(a==gts[[i]][4]){olda<-i}
+    if(b==gts[[i]][4]){oldb<-i}}
+  gts[[olda]][4]<-b
+  gts[[oldb]][4]<-a
+  gts}
+gates<-gateswitcher("z06","vwr",gates)
+gates<-gateswitcher("z11","tqm",gates)
+gates<-gateswitcher("z16","kfs",gates)
+
+
+gatesdf<-as.data.frame(matrix(nrow=0,ncol=4))
+for(i in 1:length(gates)){gatesdf<-rbind(gatesdf,gates[[i]])}
+colnames(gatesdf)<-c("a","op","b","c")
+```
+
+
+
+
+```{r,echo=FALSE,warning=FALSE}
+### recalculate z
+
+actualzs<-getzs(wirevalues,gates,highz)
+zvals<-actualzs[[1]]
+zdec<-actualzs[[2]]
+
+### re-compare the add & redo the graph
+
+cat("x=",xdec,"\n")
+cat("y=",ydec,"\n")
+cat("x+y=",x_plus_y,"\n")
+cat("z=",zdec,"\n")
+
+knitr::kable(rbind(0:45,xs=c(xvals,0),ys=c(yvals,0),added=c(x_plus_y_bin),zs=zvals))
+
+
+#### graph of the gates
+gatemat<-matrix(ncol=2,nrow=0)
+for(i in 1:length(gates)){
+  g<-gates[[i]]
+  gatemat<-rbind(gatemat,c(g[1],g[4]),c(g[3],g[4]))}
+gategraph<-graph_from_edgelist(gatemat)
+ea<-c()
+for(i in 1:length(gates)){ea<-c(ea,gates[[i]][2],gates[[i]][2])}
+edge_attr(gategraph)<-list(op=ea)
+gategraphplot<-ggraph(gategraph,layout="mds")+
+  geom_edge_fan(aes(color=op),
+                arrow=arrow(length= unit(1.5, 'mm')))+
+  geom_node_label(aes(label=name),size=1.5,repel=TRUE)
+gategraphplot
+```
+```{r}
+gatecheck()
+```
+
+Looking at the graph around 36, it looks like the AND & XOR are switched - so switching those back:
+
+```{r}
+gates<-gateswitcher("gfv","hcm",gates)
+
+
+gatesdf<-as.data.frame(matrix(nrow=0,ncol=4))
+for(i in 1:length(gates)){gatesdf<-rbind(gatesdf,gates[[i]])}
+colnames(gatesdf)<-c("a","op","b","c")
+```
+
+
+
+For some reason that I can't understand, z is wrong unless I run this several times.  That does not make sense.  And yet, it's happened multiple times.
+```{r,echo=FALSE,warning=FALSE}
+### recalculate z
+
+actualzs<-getzs(wirevalues,gates,highz)
+zvals<-actualzs[[1]]
+zdec<-actualzs[[2]]
+actualzs<-getzs(wirevalues,gates,highz)
+zvals<-actualzs[[1]]
+zdec<-actualzs[[2]]
+actualzs<-getzs(wirevalues,gates,highz)
+zvals<-actualzs[[1]]
+zdec<-actualzs[[2]]
+
+
+### re-compare the add & redo the graph
+
+cat("x=",xdec,"\n")
+cat("y=",ydec,"\n")
+cat("x+y=",x_plus_y,"\n")
+cat("z=",zdec,"\n")
+
+knitr::kable(rbind(0:45,xs=c(xvals,0),ys=c(yvals,0),added=c(x_plus_y_bin),zs=zvals))
+
+
+
+#### graph of the gates
+gatemat<-matrix(ncol=2,nrow=0)
+for(i in 1:length(gates)){
+  g<-gates[[i]]
+  gatemat<-rbind(gatemat,c(g[1],g[4]),c(g[3],g[4]))}
+gategraph<-graph_from_edgelist(gatemat)
+ea<-c()
+for(i in 1:length(gates)){ea<-c(ea,gates[[i]][2],gates[[i]][2])}
+edge_attr(gategraph)<-list(op=ea)
+gategraphplot<-ggraph(gategraph,layout="mds")+
+  geom_edge_fan(aes(color=op),
+                arrow=arrow(length= unit(1.5, 'mm')))+
+  geom_node_label(aes(label=name),size=1.5,repel=TRUE)
+gategraphplot
+```
+
+
+
+
