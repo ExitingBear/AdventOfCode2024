@@ -11,7 +11,7 @@
 
 
 
-<title>Day 20 Notebook</title>
+<title>Day 21 Notebook</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1746,7 +1746,7 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Day 20 Notebook</h1>
+<h1 class="title toc-ignore">Day 21 Notebook</h1>
 
 </div>
 
@@ -1754,246 +1754,321 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbIiNpbnB1dDwtcmVhZF9saW5lcyhcIkRheTIwU2FtcGxlLnR4dFwiKSIsImlucHV0PC1yZWFkX2xpbmVzKFwiLi4vLi4vQW9DRGF0YS9BT0MyMDI0L0RheTIwLnR4dFwiKSIsIiIsInJhY2V0cmFjazwtZGljdCgpIiwiIyMjIFB1dCB2YWxpZCBzcGFjZXMgaW50byBhIGRpY3Rpb25hcnkiLCJmb3IoaSBpbiAxOmxlbmd0aChpbnB1dCkpe1xuICB4PC11bmxpc3Qoc3RyX3NwbGl0KGlucHV0W2ldLFwiXCIpKVxuICBmb3IoaiBpbiAxOmxlbmd0aCh4KSl7XG4gICAgaWYoeFtqXSE9XCIjXCIpe1xuICAgICAgcmFjZXRyYWNrJHNldChzdHJfZmxhdHRlbihjKGksaiksXCJ+XCIpLDApfVxuICAgIGlmKHhbal09PVwiU1wiKXtyYWNlc3RhcnQ8LWMoaSxqKX1cbiAgICBpZih4W2pdPT1cIkVcIil7cmFjZWVuZDwtYyhpLGopfX19IiwibWF4eTwtbGVuZ3RoKGlucHV0KSIsIm1heHg8LWxlbmd0aCh4KSJdfQ== -->
-<pre class="r"><code>#input&lt;-read_lines(&quot;Day20Sample.txt&quot;)
-input&lt;-read_lines(&quot;../../AoCData/AOC2024/Day20.txt&quot;)
-
-racetrack&lt;-dict()
-### Put valid spaces into a dictionary
-for(i in 1:length(input)){
-  x&lt;-unlist(str_split(input[i],&quot;&quot;))
-  for(j in 1:length(x)){
-    if(x[j]!=&quot;#&quot;){
-      racetrack$set(str_flatten(c(i,j),&quot;~&quot;),0)}
-    if(x[j]==&quot;S&quot;){racestart&lt;-c(i,j)}
-    if(x[j]==&quot;E&quot;){raceend&lt;-c(i,j)}}}
-maxy&lt;-length(input)
-maxx&lt;-length(x)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p>So, it goes depressurized robot &gt; radiation robot &gt; frozen
+robot &gt; me</p>
 <div id="part-1" class="section level2">
 <h2>Part 1</h2>
-
-<p>When someone cheats through a wall, note the time they emerged from
-the wall - when (later) the non-cheating person passes that place,
-record how long it took from the moment of cheating until then. Tally
-those.</p>
+<p>These are the dictionaries to show how to get from one key to another
+- starting with the digital keypad Assuming it will always, always be
+faster to hit the same button twice than to come back to it later</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiY2hlYXRlcmNoZWF0ZXI8LWZ1bmN0aW9uKHRyayxzeSxzeCxleSxleCxtYXh5LG1heHgpe1xuICBiZWVudGhlcmU8LWRpY3QoKVxuICBjaGVhdHRpbWU8LWRpY3QoKVxuICBjaGVhdGJvbnVzPC1jKClcbiAgcHE8LXByaW9yaXR5X3F1ZXVlKClcbiAgIyMgdHJhY2luZyB5LHgsc3RlcHNcbiAgcHEkcHVzaChjKHN5LHN4LDApLDApXG4gIHJhY2V0aW1lPC1jKClcbiAgd2hpbGUocHEkc2l6ZSgpPjApe1xuICAgIGN1cnI8LXBxJHBvcCgpXG4gICAgIyMjIGJlZW4gdGhlcmU/XG4gICAgaWYoYmVlbnRoZXJlJGhhcyhzdHJfZmxhdHRlbihjdXJyWzE6Ml0sXCJ+XCIpKSl7bmV4dH1cbiAgICBiZWVudGhlcmUkc2V0KHN0cl9mbGF0dGVuKGN1cnJbMToyXSxcIn5cIiksMClcbiAgICAjIyMgZmluZCBvdXQgaWYgdGhpcyBpcyBhIGNoZWF0aW5nIGV4aXRcbiAgICBpZihjaGVhdHRpbWUkaGFzKHN0cl9mbGF0dGVuKGN1cnJbMToyXSxcIn5cIikpKXtcbiAgICAgICMjIyBpZiBzbywgZmlndXJlIG91dCB5b3VyIGJvbnVzIGFuZCBhZGQgdGhhdCB0byB0aGUgY2hlYXRib251cyBsaXN0XG4gICAgICBjYjwtY3VyclszXS1jaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGN1cnJbMToyXSxcIn5cIikpXG4gICAgICBjaGVhdGJvbnVzPC1jKGNoZWF0Ym9udXMsY2IpfVxuICAgICMjIyBpZiBhdCB0aGUgZW5kIC0gcmV0dXJuIGFsbCBvZiB0aGUgY2hlYXQgYm9udXNlc1xuICAgIGlmKGFsbChjdXJyWzE6Ml09PWMoZXksZXgpKSl7XG4gICAgICByZXR1cm4oY2hlYXRib251cyl9XG4gICAgIyMjIyBPdGhlcndpc2UsIGNoZWNrIGFsbCA0IGRpcmVjdGlvbnMuICBJbiBlYWNoIGRpcmVjdGlvbixcbiAgICAjIyMjIyBpZiB0aGVyZSBpc24ndCBhIHdhbGwsIGdvIHRoZXJlLlxuICAgICMjIyMjIGlmIHRoZXJlIGlzIGEgd2FsbCwgIGZvciBlYWNoIGRpcmVjdGlvbiBvdXQgb2YgdGhlIHdhbGwsIHB1dCB0aGUgdGltZSB5b3Ugd291bGQgaGF2ZSBjaGVhdGVkIHRvIHRoYXQgcG9pbnRcbiAgICAjI3VwXG4gICAgaWYoY3VyclsxXT4xKXtcbiAgICAgIGlmKHRyayRoYXMoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSksXCJ+XCIpKSl7XG4gICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzNdKzEpLC1zdW0oMSxjdXJyWzNdLGFicyhjKGV5LGV4KS1jKGN1cnJbMV0tMSxjdXJyWzJdKSkpKVxuICAgICAgfWVsc2V7XG4gICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMixjdXJyWzJdKSxcIn5cIiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0yLGN1cnJbMl0pLFwiflwiKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSlcbiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0rMSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdKzEpLFwiflwiKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSlcbiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0tMSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdLTEpLFwiflwiKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSl9fVxuICAgICMjZG93blxuICAgIGlmKGN1cnJbMV08bWF4eSl7XG4gICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLFwiflwiKSkpe1xuICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSsxLGN1cnJbMl0sY3VyclszXSsxKSwtc3VtKDEsY3VyclszXSxhYnMoYyhleSxleCktYyhjdXJyWzFdKzEsY3VyclsyXSkpKSlcbiAgICAgIH1lbHNle1xuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzIsY3VyclsyXSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMixjdXJyWzJdKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpXG4gICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKzEpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSsxKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpXG4gICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdLTEpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXS0xKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpfX1cbiAgICAjI2xlZnRcbiAgICBpZihjdXJyWzJdPjEpe1xuICAgICAgaWYodHJrJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXS0xKSxcIn5cIikpKXtcbiAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXS0xLGN1cnJbM10rMSksLXN1bSgxLGN1cnJbM10sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdLTEpKSkpXG4gICAgICB9ZWxzZXtcbiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTIpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0tMiksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXS0xKSxcIn5cIiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0tMSksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXS0xKSxcIn5cIiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0tMSksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKX19XG4gICAgIyNyaWdodFxuICAgIGlmKGN1cnJbMl08bWF4eCl7XG4gICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEpLFwiflwiKSkpe1xuICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdKzEsY3VyclszXSsxKSwtc3VtKDEsY3VyclszXSxhYnMoYyhleSxleCktYyhjdXJyWzFdLGN1cnJbMl0rMSkpKSlcbiAgICAgIH1lbHNle1xuICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzIpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMiksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKVxuICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0rMSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdKzEpLFwiflwiKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSlcbiAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKzEpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSsxKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpfX1cblxufVxucmFjZXRpbWV9In0= -->
-<pre class="r"><code>cheatercheater&lt;-function(trk,sy,sx,ey,ex,maxy,maxx){
-  beenthere&lt;-dict()
-  cheattime&lt;-dict()
-  cheatbonus&lt;-c()
-  pq&lt;-priority_queue()
-  ## tracing y,x,steps
-  pq$push(c(sy,sx,0),0)
-  racetime&lt;-c()
-  while(pq$size()&gt;0){
-    curr&lt;-pq$pop()
-    ### been there?
-    if(beenthere$has(str_flatten(curr[1:2],&quot;~&quot;))){next}
-    beenthere$set(str_flatten(curr[1:2],&quot;~&quot;),0)
-    ### find out if this is a cheating exit
-    if(cheattime$has(str_flatten(curr[1:2],&quot;~&quot;))){
-      ### if so, figure out your bonus and add that to the cheatbonus list
-      cb&lt;-curr[3]-cheattime$get(str_flatten(curr[1:2],&quot;~&quot;))
-      cheatbonus&lt;-c(cheatbonus,cb)}
-    ### if at the end - return all of the cheat bonuses
-    if(all(curr[1:2]==c(ey,ex))){
-      return(cheatbonus)}
-    #### Otherwise, check all 4 directions.  In each direction,
-    ##### if there isn&#39;t a wall, go there.
-    ##### if there is a wall,  for each direction out of the wall, put the time you would have cheated to that point
-    ##up
-    if(curr[1]&gt;1){
-      if(trk$has(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;))){
-        pq$push(c(curr[1]-1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1]-1,curr[2]))))
-      }else{
-          cheattime$set(str_flatten(c(curr[1]-2,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-2,curr[2]),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]-1,curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]+1),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]-1,curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]-1),&quot;~&quot;),default=c()),curr[3]+2))}}
-    ##down
-    if(curr[1]&lt;maxy){
-      if(trk$has(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;))){
-        pq$push(c(curr[1]+1,curr[2],curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1]+1,curr[2]))))
-      }else{
-          cheattime$set(str_flatten(c(curr[1]+2,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+2,curr[2]),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]+1,curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]+1),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]+1,curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]-1),&quot;~&quot;),default=c()),curr[3]+2))}}
-    ##left
-    if(curr[2]&gt;1){
-      if(trk$has(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;))){
-        pq$push(c(curr[1],curr[2]-1,curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1],curr[2]-1))))
-      }else{
-          cheattime$set(str_flatten(c(curr[1],curr[2]-2),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]-2),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]-1,curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]-1),&quot;~&quot;),default=c()),curr[3]+2))
-          cheattime$set(str_flatten(c(curr[1]+1,curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]-1),&quot;~&quot;),default=c()),curr[3]+2))}}
-    ##right
-    if(curr[2]&lt;maxx){
-      if(trk$has(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;))){
-        pq$push(c(curr[1],curr[2]+1,curr[3]+1),-sum(1,curr[3],abs(c(ey,ex)-c(curr[1],curr[2]+1))))
-      }else{
-        cheattime$set(str_flatten(c(curr[1],curr[2]+2),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]+2),&quot;~&quot;),default=c()),curr[3]+2))
-        cheattime$set(str_flatten(c(curr[1]-1,curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]+1),&quot;~&quot;),default=c()),curr[3]+2))
-        cheattime$set(str_flatten(c(curr[1]+1,curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]+1),&quot;~&quot;),default=c()),curr[3]+2))}}
-
-}
-racetime}</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjpbImQyZDwtZGljdCgpIiwiZDJkJHNldChcIl5eXCIsXCJBXCIpIiwiZDJkJHNldChcIl48XCIsXCJ2PEFcIikiLCJkMmQkc2V0KFwiXj5cIixjKFwidj5BXCIsXCI+dkFcIikpIiwiZDJkJHNldChcIl52XCIsXCJ2QVwiKSIsImQyZCRzZXQoXCJeQVwiLFwiPkFcIikiLCJkMmQkc2V0KFwiPF5cIixcIj5eQVwiKSIsImQyZCRzZXQoXCI8PFwiLFwiQVwiKSIsImQyZCRzZXQoXCI8PlwiLFwiPj5BXCIpIiwiZDJkJHNldChcIjx2XCIsXCI+QVwiKSIsImQyZCRzZXQoXCI8QVwiLFwiPj5eQVwiKSIsImQyZCRzZXQoXCI+XlwiLGMoXCI8XkFcIixcIl48QVwiKSkiLCJkMmQkc2V0KFwiPjxcIixcIjw8QVwiKSIsImQyZCRzZXQoXCI+PlwiLFwiQVwiKSIsImQyZCRzZXQoXCI+dlwiLFwiPEFcIikiLCJkMmQkc2V0KFwiPkFcIixcIl5BXCIpIiwiZDJkJHNldChcInZeXCIsXCJeQVwiKSIsImQyZCRzZXQoXCJ2PFwiLFwiPEFcIikiLCJkMmQkc2V0KFwidj5cIixcIj5BXCIpIiwiZDJkJHNldChcInZ2XCIsXCJBXCIpIiwiZDJkJHNldChcInZBXCIsYyhcIj5eQVwiLFwiXj5BXCIpKSIsImQyZCRzZXQoXCJBXlwiLFwiPEFcIikiLCJkMmQkc2V0KFwiQTxcIixcInY8PEFcIikiLCJkMmQkc2V0KFwiQT5cIixcInZBXCIpIiwiZDJkJHNldChcIkF2XCIsYyhcInY8QVwiLFwiPHZBXCIpKSIsImQyZCRzZXQoXCJBQVwiLFwiQVwiKSJdfQ== -->
+<pre class="r"><code>d2d&lt;-dict()
+d2d$set(&quot;^^&quot;,&quot;A&quot;)
+d2d$set(&quot;^&lt;&quot;,&quot;v&lt;A&quot;)
+d2d$set(&quot;^&gt;&quot;,c(&quot;v&gt;A&quot;,&quot;&gt;vA&quot;))
+d2d$set(&quot;^v&quot;,&quot;vA&quot;)
+d2d$set(&quot;^A&quot;,&quot;&gt;A&quot;)
+d2d$set(&quot;&lt;^&quot;,&quot;&gt;^A&quot;)
+d2d$set(&quot;&lt;&lt;&quot;,&quot;A&quot;)
+d2d$set(&quot;&lt;&gt;&quot;,&quot;&gt;&gt;A&quot;)
+d2d$set(&quot;&lt;v&quot;,&quot;&gt;A&quot;)
+d2d$set(&quot;&lt;A&quot;,&quot;&gt;&gt;^A&quot;)
+d2d$set(&quot;&gt;^&quot;,c(&quot;&lt;^A&quot;,&quot;^&lt;A&quot;))
+d2d$set(&quot;&gt;&lt;&quot;,&quot;&lt;&lt;A&quot;)
+d2d$set(&quot;&gt;&gt;&quot;,&quot;A&quot;)
+d2d$set(&quot;&gt;v&quot;,&quot;&lt;A&quot;)
+d2d$set(&quot;&gt;A&quot;,&quot;^A&quot;)
+d2d$set(&quot;v^&quot;,&quot;^A&quot;)
+d2d$set(&quot;v&lt;&quot;,&quot;&lt;A&quot;)
+d2d$set(&quot;v&gt;&quot;,&quot;&gt;A&quot;)
+d2d$set(&quot;vv&quot;,&quot;A&quot;)
+d2d$set(&quot;vA&quot;,c(&quot;&gt;^A&quot;,&quot;^&gt;A&quot;))
+d2d$set(&quot;A^&quot;,&quot;&lt;A&quot;)
+d2d$set(&quot;A&lt;&quot;,&quot;v&lt;&lt;A&quot;)
+d2d$set(&quot;A&gt;&quot;,&quot;vA&quot;)
+d2d$set(&quot;Av&quot;,c(&quot;v&lt;A&quot;,&quot;&lt;vA&quot;))
+d2d$set(&quot;AA&quot;,&quot;A&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>And this is for the numeric keypad. If it is in here, it is in my
+data or one of the sample/test data sets.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjpbImQybjwtZGljdCgpIiwiZDJuJHNldChcIjAyXCIsXCJeQVwiKSIsImQybiRzZXQoXCIwNVwiLFwiXl5BXCIpIiwiZDJuJHNldChcIjA4XCIsXCJeXl5BXCIpIiwiZDJuJHNldChcIjBBXCIsXCI+QVwiKSIsImQybiRzZXQoXCIxM1wiLFwiPj5BXCIpIiwiZDJuJHNldChcIjE1XCIsYyhcIl4+QVwiLFwiPl5BXCIpKSIsImQybiRzZXQoXCIxN1wiLFwiXl5BXCIpIiwiZDJuJHNldChcIjFBXCIsYyhcIj4+dkFcIikpIiwiZDJuJHNldChcIjFBXCIsYyhcIj4+dkFcIikpIiwiZDJuJHNldChcIjI5XCIsYyhcIj5eXkFcIixcIl5ePkFcIikpIiwiZDJuJHNldChcIjNBXCIsXCJ2QVwiKSIsImQybiRzZXQoXCIzN1wiLGMoXCJeXjw8QVwiLFwiPDxeXkFcIikpIiwiZDJuJHNldChcIjQ1XCIsXCI+QVwiKSIsImQybiRzZXQoXCI0QVwiLFwiPj52dkFcIikiLCJkMm4kc2V0KFwiNTZcIixcIj5BXCIpIiwiZDJuJHNldChcIjU5XCIsYyhcIl4+QVwiLFwiPl5BXCIpKSIsImQybiRzZXQoXCI1QVwiLGMoXCJ2dj5BXCIsXCI+dnZBXCIpKSIsImQybiRzZXQoXCI2MVwiLGMoXCJ2PDxBXCIsXCI8PHZBXCIpKSIsImQybiRzZXQoXCI2NFwiLFwiPDxBXCIpIiwiZDJuJHNldChcIjY3XCIsYyhcIl48PEFcIixcIjw8XkFcIikpIiwiZDJuJHNldChcIjY4XCIsYyhcIl48QVwiLFwiPF5BXCIpKSIsImQybiRzZXQoXCI2QVwiLFwidnZBXCIpIiwiZDJuJHNldChcIjcxXCIsXCJ2dkFcIikiLCJkMm4kc2V0KFwiNzVcIixjKFwidj5BXCIsXCI+dkFcIikpIiwiZDJuJHNldChcIjc5XCIsXCI+PkFcIikiLCJkMm4kc2V0KFwiODBcIixcInZ2dkFcIikiLCJkMm4kc2V0KFwiODlcIixcIj5BXCIpIiwiZDJuJHNldChcIjhBXCIsYyhcInZ2dj5BXCIsXCI+dnZ2QVwiKSkiLCJkMm4kc2V0KFwiOTRcIixjKFwiPDx2QVwiLFwidjw8QVwiKSkiLCJkMm4kc2V0KFwiOTZcIixcInZBXCIpIiwiZDJuJHNldChcIjk4XCIsXCI8QVwiKSIsImQybiRzZXQoXCI5QVwiLFwidnZ2QVwiKSIsImQybiRzZXQoXCJBMFwiLGMoXCI8QVwiKSkiLCJkMm4kc2V0KFwiQTFcIixcIl48PEFcIikiLCJkMm4kc2V0KFwiQTNcIixcIl5BXCIpIiwiZDJuJHNldChcIkEyXCIsYyhcIl48QVwiLFwiPF5BXCIpKSIsImQybiRzZXQoXCJBNFwiLFwiXl48PEFcIikiLCJkMm4kc2V0KFwiQTZcIixcIl5eQVwiKSIsImQybiRzZXQoXCJBOFwiLGMoXCJeXl48QVwiLFwiPF5eXkFcIikpIiwiZDJuJHNldChcIkE5XCIsXCJeXl5BXCIpIl19 -->
+<pre class="r"><code>d2n&lt;-dict()
+d2n$set(&quot;02&quot;,&quot;^A&quot;)
+d2n$set(&quot;05&quot;,&quot;^^A&quot;)
+d2n$set(&quot;08&quot;,&quot;^^^A&quot;)
+d2n$set(&quot;0A&quot;,&quot;&gt;A&quot;)
+d2n$set(&quot;13&quot;,&quot;&gt;&gt;A&quot;)
+d2n$set(&quot;15&quot;,c(&quot;^&gt;A&quot;,&quot;&gt;^A&quot;))
+d2n$set(&quot;17&quot;,&quot;^^A&quot;)
+d2n$set(&quot;1A&quot;,c(&quot;&gt;&gt;vA&quot;))
+d2n$set(&quot;1A&quot;,c(&quot;&gt;&gt;vA&quot;))
+d2n$set(&quot;29&quot;,c(&quot;&gt;^^A&quot;,&quot;^^&gt;A&quot;))
+d2n$set(&quot;3A&quot;,&quot;vA&quot;)
+d2n$set(&quot;37&quot;,c(&quot;^^&lt;&lt;A&quot;,&quot;&lt;&lt;^^A&quot;))
+d2n$set(&quot;45&quot;,&quot;&gt;A&quot;)
+d2n$set(&quot;4A&quot;,&quot;&gt;&gt;vvA&quot;)
+d2n$set(&quot;56&quot;,&quot;&gt;A&quot;)
+d2n$set(&quot;59&quot;,c(&quot;^&gt;A&quot;,&quot;&gt;^A&quot;))
+d2n$set(&quot;5A&quot;,c(&quot;vv&gt;A&quot;,&quot;&gt;vvA&quot;))
+d2n$set(&quot;61&quot;,c(&quot;v&lt;&lt;A&quot;,&quot;&lt;&lt;vA&quot;))
+d2n$set(&quot;64&quot;,&quot;&lt;&lt;A&quot;)
+d2n$set(&quot;67&quot;,c(&quot;^&lt;&lt;A&quot;,&quot;&lt;&lt;^A&quot;))
+d2n$set(&quot;68&quot;,c(&quot;^&lt;A&quot;,&quot;&lt;^A&quot;))
+d2n$set(&quot;6A&quot;,&quot;vvA&quot;)
+d2n$set(&quot;71&quot;,&quot;vvA&quot;)
+d2n$set(&quot;75&quot;,c(&quot;v&gt;A&quot;,&quot;&gt;vA&quot;))
+d2n$set(&quot;79&quot;,&quot;&gt;&gt;A&quot;)
+d2n$set(&quot;80&quot;,&quot;vvvA&quot;)
+d2n$set(&quot;89&quot;,&quot;&gt;A&quot;)
+d2n$set(&quot;8A&quot;,c(&quot;vvv&gt;A&quot;,&quot;&gt;vvvA&quot;))
+d2n$set(&quot;94&quot;,c(&quot;&lt;&lt;vA&quot;,&quot;v&lt;&lt;A&quot;))
+d2n$set(&quot;96&quot;,&quot;vA&quot;)
+d2n$set(&quot;98&quot;,&quot;&lt;A&quot;)
+d2n$set(&quot;9A&quot;,&quot;vvvA&quot;)
+d2n$set(&quot;A0&quot;,c(&quot;&lt;A&quot;))
+d2n$set(&quot;A1&quot;,&quot;^&lt;&lt;A&quot;)
+d2n$set(&quot;A3&quot;,&quot;^A&quot;)
+d2n$set(&quot;A2&quot;,c(&quot;^&lt;A&quot;,&quot;&lt;^A&quot;))
+d2n$set(&quot;A4&quot;,&quot;^^&lt;&lt;A&quot;)
+d2n$set(&quot;A6&quot;,&quot;^^A&quot;)
+d2n$set(&quot;A8&quot;,c(&quot;^^^&lt;A&quot;,&quot;&lt;^^^A&quot;))
+d2n$set(&quot;A9&quot;,&quot;^^^A&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>First, find all the possible paths for the depressurized robot -
+because all of these are the same length, this should just grab the
+info</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoibm9wcmVzc3VyZTwtZnVuY3Rpb24obnVtYmVycGFkLGNvZGUpe1xuICAjaW5pdGlhbGl6ZSB0aGUgY29kZSB3aXRoIFwiQVwiXG4gIGNvZGU8LXN0cl9jKFwiQVwiLGNvZGUpXG4gIHE8LXF1ZXVlKClcbiAgb3V0PC1jKClcbiAgcSRwdXNoKGMoY29kZSxcIlwiKSlcbiAgd2hpbGUocSRzaXplKCk+MCl7XG4gICAgY2RlPC1xJHBvcCgpXG4gICAgIyMjIyBpZiBubyBtb3JlIGNoYXJhY3RlcnMsIGVudGVyIHRoZSBkaXJlY3Rpb25hbCBrZXlwYWQgc2VxdWVuY2UgaW50byBvdXRcbiAgICBpZihuY2hhcihjZGVbMV0pPT0xKXtcbiAgICAgIG91dDwtYyhvdXQsY2RlWzJdKVxuICAgICAgbmV4dH1cbiAgICAjIyMgb3RoZXJ3aXNlLCB1c2UgdGhlIGRpY3Rpb25hcnkgdG8gZmluZCBzZXF1ZW5jZXNcbiAgICB4PC1udW1iZXJwYWQkZ2V0KHN0cl9zdWIoY2RlWzFdLGVuZD0yKSlcbiAgICAjIyMgZm9yIGVhY2ggcG9zc2libGUgcGF0aCBpbiB0aGUgZGljdGlvbmFyeSxcbiAgICAjIyMgcHVzaCB0aGUgY29kZSB3aXRob3V0IHRoZSBmaXJzdCBjaGFyYWN0ZXIgYW5kIGFkZCB0aGUgbW92ZXMgdG8gdGhlIGVuZCBvZiB0aGUgc2VxdWVuY2Ugb2YgbW92ZXMgXG4gICAgZm9yKGkgaW4gMTpsZW5ndGgoeCkpe1xuICAgICAgcSRwdXNoKGMoc3RyX3N1YihjZGVbMV0sc3RhcnQ9Miksc3RyX2MoY2RlWzJdLHhbaV0pKSl9fVxub3V0fSJ9 -->
+<pre class="r"><code>nopressure&lt;-function(numberpad,code){
+  #initialize the code with &quot;A&quot;
+  code&lt;-str_c(&quot;A&quot;,code)
+  q&lt;-queue()
+  out&lt;-c()
+  q$push(c(code,&quot;&quot;))
+  while(q$size()&gt;0){
+    cde&lt;-q$pop()
+    #### if no more characters, enter the directional keypad sequence into out
+    if(nchar(cde[1])==1){
+      out&lt;-c(out,cde[2])
+      next}
+    ### otherwise, use the dictionary to find sequences
+    x&lt;-numberpad$get(str_sub(cde[1],end=2))
+    ### for each possible path in the dictionary,
+    ### push the code without the first character and add the moves to the end of the sequence of moves 
+    for(i in 1:length(x)){
+      q$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i])))}}
+out}</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-
-<!-- rnb-source-begin eyJkYXRhIjpbInAxPC1jaGVhdGVyY2hlYXRlcihyYWNldHJhY2sscmFjZXN0YXJ0WzFdLHJhY2VzdGFydFsyXSxyYWNlZW5kWzFdLHJhY2VlbmRbMl0sbWF4eSxtYXh4KSIsInRhYmxlKHAxKSJdfQ== -->
-<pre class="r"><code>p1&lt;-cheatercheater(racetrack,racestart[1],racestart[2],raceend[1],raceend[2],maxy,maxx)
-table(p1)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjpbInIxPC1ub3ByZXNzdXJlKGQybixcIjAyOUFcIikiLCJyMSJdfQ== -->
+<pre class="r"><code>r1&lt;-nopressure(d2n,&quot;029A&quot;)
+r1</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoicDFcbiAwICAyICA0ICA2ICA4IDEwIDEyIDIwIDM2IDM4IDQwIDY0IFxuMzMgMTQgMTQgIDIgIDQgIDIgIDMgIDEgIDEgIDEgIDEgIDEgXG4ifQ== -->
-<pre><code>p1
- 0  2  4  6  8 10 12 20 36 38 40 64 
-33 14 14  2  4  2  3  1  1  1  1  1 </code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiPEFeQT5eXkF2dnZBXCIgXCI8QV5BXl4+QXZ2dkFcIlxuIn0= -->
+<pre><code>[1] &quot;&lt;A^A&gt;^^AvvvA&quot; &quot;&lt;A^A^^&gt;AvvvA&quot;</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjpbIiNwYXJ0MTwtbGVuZ3RoKHdoaWNoKHAxPj0xMDApKSIsIiNwYXJ0MSJdfQ== -->
-<pre class="r"><code>#part1&lt;-length(which(p1&gt;=100))
-#part1</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjpbIjxBXkE+Xl5BdnZ2QVxuIiwiPEFeQV5ePkF2dnZBXG4iXX0= -->
+<pre><code>&lt;A^A&gt;^^AvvvA
+&lt;A^A^^&gt;AvvvA</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Then find the path for the radiation robots</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoicmFkaWF0aW9uPC1mdW5jdGlvbihkcGFkLGNvZGVzKXtcbiAgcTwtcXVldWUoKVxuICAjIyMjIHNtYWxsZXN0IGxlbmd0aFxuICBzaG9ydGVzdDwtSW5mXG4gIHNtYWxsZXN0PC1saXN0KClcbiAgZm9yKGkgaW4gMTpsZW5ndGgoY29kZXMpKXtcbiAgICB4PC1jb2Rlc1tpXVxuICAgICMjIyBwdXNoaW5nIHRoZSBjdXJyZW50LCB0aGUgb3V0cHV0LCBhbmQgdGhlIHN0YXJ0aW5nXG4gICAgcSRwdXNoKGMoc3RyX2MoXCJBXCIseCksXCJcIix4KSl9XG4gICAgd2hpbGUocSRzaXplKCk+MCl7XG4gICAgICBjZGU8LXEkcG9wKClcbiAgICAgICMjIyBjaGVjayB0byBzZWUgaWYgdGhpcyBoYXMgd29ya2VkIGl0cyB3YXkgdGhyb3VnaCB0aGUgc2VxdWVuY2VcbiAgICAgIGlmKG5jaGFyKGNkZVsxXSk9PTEpe1xuICAgICAgICAjIyMgaWYgdGhpcyBpcyB0aGUgc2hvcnRlc3QsIHVwZGF0ZSBldmVyeXRoaW5nXG4gICAgICAgIGlmKG5jaGFyKGNkZVsyXSk8c2hvcnRlc3Qpe1xuICAgICAgICAgIHNob3J0ZXN0PC1uY2hhcihjZGVbMl0pXG4gICAgICAgICAgc21hbGxlc3Q8LWxpc3QoY2RlWzI6M10pXG4gICAgICAgICAgIyMjIGlmIGl0IGlzIHRoZSBzYW1lIGxlbmd0aCBhcyB0aGUgc2hvcnRlc3QgLSBrZWVwIGl0XG4gICAgICAgIH1lbHNlIGlmKG5jaGFyKGNkZVsyXSk9PXNob3J0ZXN0KXtcbiAgICAgICAgICBzbWFsbGVzdDwtYyhzbWFsbGVzdCxsaXN0KGNkZVsyOjNdKSl9XG4gICAgICAgIG5leHR9XG4gICAgICAjIyMjIG90aGVyd2lzZSwgc3RhcnQgY29uc3RydWN0aW5nIHRoZSBcbiAgICAgIHg8LWRwYWQkZ2V0KHN0cl9zdWIoY2RlWzFdLGVuZD0yKSlcbiAgICAgICMjIyBmb3IgZWFjaCBwb3NzaWJsZSBwYXRoIGluIHRoZSBkaWN0aW9uYXJ5LFxuICAgICAgIyMjIHB1c2ggdGhlIGNvZGUgd2l0aG91dCB0aGUgZmlyc3QgY2hhcmFjdGVyIGFuZCBhZGQgdGhlIG1vdmVzIHRvIHRoZSBlbmQgb2YgdGhlIHNlcXVlbmNlIG9mIG1vdmVzIFxuICAgICAgZm9yKGkgaW4gMTpsZW5ndGgoeCkpe1xuICAgICAgICBxJHB1c2goYyhzdHJfc3ViKGNkZVsxXSxzdGFydD0yKSxzdHJfYyhjZGVbMl0seFtpXSksY2RlWzNdKSl9fSAgICAgXG4gICAgc21hbGxlc3R9In0= -->
+<pre class="r"><code>radiation&lt;-function(dpad,codes){
+  q&lt;-queue()
+  #### smallest length
+  shortest&lt;-Inf
+  smallest&lt;-list()
+  for(i in 1:length(codes)){
+    x&lt;-codes[i]
+    ### pushing the current, the output, and the starting
+    q$push(c(str_c(&quot;A&quot;,x),&quot;&quot;,x))}
+    while(q$size()&gt;0){
+      cde&lt;-q$pop()
+      ### check to see if this has worked its way through the sequence
+      if(nchar(cde[1])==1){
+        ### if this is the shortest, update everything
+        if(nchar(cde[2])&lt;shortest){
+          shortest&lt;-nchar(cde[2])
+          smallest&lt;-list(cde[2:3])
+          ### if it is the same length as the shortest - keep it
+        }else if(nchar(cde[2])==shortest){
+          smallest&lt;-c(smallest,list(cde[2:3]))}
+        next}
+      #### otherwise, start constructing the 
+      x&lt;-dpad$get(str_sub(cde[1],end=2))
+      ### for each possible path in the dictionary,
+      ### push the code without the first character and add the moves to the end of the sequence of moves 
+      for(i in 1:length(x)){
+        q$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i]),cde[3]))}}     
+    smallest}</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
-<div id="part-2" class="section level2">
-<h2>Part 2</h2>
-<p>Small change - there are two separate sets of rules, one for while
-
-you’re cheating, one for the path that hasn’t cheated yet. To make sure
-that all the cheats are in place before the non-cheat gets there, they
-run first. The same idea, though - time recorded when cheating stops at
-the place the cheating stops.</p>
-<p>To be fair - this is not fast and could be done faster
-differently.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoibG9uZ2NoZWF0PC1mdW5jdGlvbih0cmssc3ksc3gsZXksZXgsbWF4eSxtYXh4KXtcbiAgYmVlbnRoZXJlPC1kaWN0KClcbiAgY2hlYXR0aW1lPC1kaWN0KClcbiAgY2hlYXRwYXRoPC1kaWN0KClcbiAgY2hlYXRib251czwtYygpXG4gIHBxPC1wcmlvcml0eV9xdWV1ZSgpXG4gICMjIHRyYWNpbmcgeSx4LGNoZWF0c3RhcnQsY2hlYXRzdG9wLGNoZWF0c3RlcHMsc3RlcHNcbiAgcHEkcHVzaChjKHN5LHN4LC0xMDAsLTEwMCwwLDApLDApXG4gIHJhY2V0aW1lPC1jKClcbiAgd2hpbGUocHEkc2l6ZSgpPjApe1xuICAgIGN1cnI8LXBxJHBvcCgpXG4gICAgIyMjIyBpZiBiZWVuIGNoZWF0aW5nIHRvbyBsb25nLCBzdG9wXG4gICAgaWYoY3Vycls1XT4xOSl7bmV4dH1cbiAgICAjIyMgYmVlbiB0aGVyZVxuICAgIGlmKGJlZW50aGVyZSRoYXMoc3RyX2ZsYXR0ZW4oY3VyclsxOjRdLFwiflwiKSkpe25leHR9XG4gICAgYmVlbnRoZXJlJHNldChzdHJfZmxhdHRlbihjdXJyWzE6NF0sXCJ+XCIpLDApXG4gICAgIyMjIGlmIHlvdSBoYXZlIG5vdCBjaGVhdGVkIHlldFxuICAgIGlmKGN1cnJbM109PS0xMDApe1xuICAgICAgIyMjIyBmaW5kIG91dCBpZiB0aGlzIGlzIGEgc3BhY2UgdGhhdCBnZXRzIGNoZWF0ZWQgdG9cbiAgICAgIGlmKGNoZWF0dGltZSRoYXMoc3RyX2ZsYXR0ZW4oY3VyclsxOjJdLFwiflwiKSkpe1xuICAgICAgICAjIyMgaWYgc28sIGZpZ3VyZSBvdXQgdGhlIGJvbnVzIGFuZCBhZGQgdGhhdCB0byB0aGUgY2hlYXRib251cyBsaXN0XG4gICAgICAgIGNiPC1jdXJyWzZdLWNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oY3VyclsxOjJdLFwiflwiKSlcbiAgICAgICAgY2hlYXRib251czwtYyhjaGVhdGJvbnVzLGNiKX1cbiAgICAgICMjIyBpZiBhdCB0aGUgZW5kIC0gcmV0dXJuIGFsbCBvZiB0aGUgY2hlYXQgYm9udXNlc1xuICAgICAgaWYoYWxsKGN1cnJbMToyXT09YyhleSxleCkpKXtcbiAgICAgICAgcmV0dXJuKGNoZWF0Ym9udXMpfVxuICAgICAgIyMjIyBPdGhlcndpc2UsIGNoZWNrIGFsbCA0IGRpcmVjdGlvbnMuICBJbiBlYWNoIGRpcmVjdGlvbixcbiAgICAgICMjIyMjIHN0YXJ0IGNoZWF0aW5nIGluIHRoYXQgZGlyZWN0aW9uLlxuICAgICAgIyMjIyMgYWxzbywgd2l0aCBubyB3YWxsLCBnbyB0aGVyZSB3aXRob3V0IGNoZWF0aW5nLlxuICAgICAgIyN1cFxuICAgICAgaWYoY3VyclsxXT4xKXtcbiAgICAgICAgaWYodHJrJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdKSxcIn5cIikpKXtcbiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXS0xLGN1cnJbMl0sLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXS0xLGN1cnJbMl0pKSkpfVxuICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKVxuICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0pLFwiflwiKSwwKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpXG4gICAgICAgICAgfVxuICAgICAgIyNkb3duXG4gICAgICBpZihjdXJyWzFdPG1heHkpe1xuICAgICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLFwiflwiKSkpe1xuICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdKzEsY3VyclsyXSwtMTAwLC0xMDAsMCxjdXJyWzZdKzEpLC1zdW0oY3Vycls2XSxhYnMoYyhleSxleCktYyhjdXJyWzFdKzEsY3VyclsyXSkpKSl9XG4gICAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0rMSxjdXJyWzJdLGN1cnJbMV0sY3VyclsyXSwxLGN1cnJbNl0rMSksNTAwLWN1cnJbNl0pXG4gICAgICAgICAgY2hlYXRwYXRoJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdLGN1cnJbMV0sY3VyclsyXSksXCJ+XCIpLDApXG4gICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKSxcIn5cIiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLFwiflwiKSxkZWZhdWx0PWMoKSksY3Vycls2XSsxKSlcbiAgICAgICAgICB9XG4gICAgICAjI2xlZnRcbiAgICAgIGlmKGN1cnJbMl0+MSl7XG4gICAgICAgIGlmKHRyayRoYXMoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0tMSksXCJ+XCIpKSl7XG4gICAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXS0xLC0xMDAsLTEwMCwwLGN1cnJbNl0rMSksLXN1bShjdXJyWzZdLGFicyhjKGV5LGV4KS1jKGN1cnJbMV0sY3VyclsyXS0xKSkpKX1cbiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdLTEsY3VyclsxXSxjdXJyWzJdLDEsY3Vycls2XSsxKSw1MDAtY3Vycls2XSlcbiAgICAgICAgICBjaGVhdHBhdGgkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEsY3VyclsxXSxjdXJyWzJdKSxcIn5cIiksMClcbiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0tMSksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzZdKzEpKVxuICAgICAgfVxuICAgICAgIyNyaWdodFxuICAgICAgaWYoY3VyclsyXTxtYXh4KXtcbiAgICAgICAgaWYodHJrJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsxKSxcIn5cIikpKXtcbiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdKzEsLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdKzEpKSkpfVxuICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLGN1cnJbMl0rMSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKVxuICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMSxjdXJyWzFdLGN1cnJbMl0pLFwiflwiKSwwKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsxKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpXG4gICAgICAgICAgfVxuICAgICAgIyMjIGlmIHlvdSBhcmUgY2hlYXRpbmcsIGNoZWNrIHRvIHNlZSBpZiBvdmVyIDIwIHN0ZXBzLiBJZiBzbywgdG9vIG1hbnksIHN0b3BcbiAgICAgICMjIyBJbiBlYWNoIGRpcmVjdGlvbiwgYWRkIHRvIHRoZSBjaGVhdHRpbWUgbGVkZ2VyICphbmQqIGtlZXBnb2luZ1xuICAgIH1lbHNle1xuICAgICAgaWYoY3VyclsxXT4xKXtcbiAgICAgICAgaWYoIWNoZWF0cGF0aCRoYXMoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0pLFwiflwiKSkpe1xuICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0sY3Vycls1XSsxLGN1cnJbNl0rMSksNTAwLWN1cnJbNl0pXG4gICAgICAgICAgY2hlYXRwYXRoJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdLGN1cnJbM10sY3Vycls0XSksXCJ+XCIpLDApXG4gICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdKSxcIn5cIiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLFwiflwiKSxkZWZhdWx0PWMoKSksY3Vycls2XSsxKSl9fVxuICAgICAgIyMjIGRvd25cbiAgICAgIGlmKGN1cnJbMV08bWF4eSl7XG4gICAgICAgIGlmKCFjaGVhdHBhdGgkaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0sY3VyclszXSxjdXJyWzRdKSxcIn5cIikpKXtcbiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSsxLGN1cnJbMl0sY3VyclszXSxjdXJyWzRdLGN1cnJbNV0rMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKVxuICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0pLFwiflwiKSwwKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpfX1cbiAgICAgICMjIyBsZWZ0XG4gICAgICBpZihjdXJyWzJdPjEpe1xuICAgICAgICBpZighY2hlYXRwYXRoJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXS0xLGN1cnJbM10sY3Vycls0XSksXCJ+XCIpKSl7XG4gICAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXS0xLGN1cnJbM10sY3Vycls0XSxjdXJyWzVdKzEsY3Vycls2XSsxKSw1MDAtY3Vycls2XSlcbiAgICAgICAgICBjaGVhdHBhdGgkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEsY3VyclszXSxjdXJyWzRdKSxcIn5cIiksMClcbiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLFwiflwiKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0tMSksXCJ+XCIpLGRlZmF1bHQ9YygpKSxjdXJyWzZdKzEpKX19XG4gICAgICAjIyMgcmlnaHRcbiAgICAgIGlmKGN1cnJbMl08bWF4eCl7XG4gICAgICAgIGlmKCFjaGVhdHBhdGgkaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEsY3VyclszXSxjdXJyWzRdKSxcIn5cIikpKXtcbiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdKzEsY3VyclszXSxjdXJyWzRdLGN1cnJbNV0rMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKVxuICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMSxjdXJyWzNdLGN1cnJbNF0pLFwiflwiKSwwKVxuICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMSksXCJ+XCIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsxKSxcIn5cIiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpfX1cbiAgICB9XG4gIH0jIGNsb3Npbmcgd2hpbGVcbn0ifQ== -->
-<pre class="r"><code>longcheat&lt;-function(trk,sy,sx,ey,ex,maxy,maxx){
-  beenthere&lt;-dict()
-  cheattime&lt;-dict()
-  cheatpath&lt;-dict()
-  cheatbonus&lt;-c()
+<!-- rnb-source-begin eyJkYXRhIjoicjI8LXJhZGlhdGlvbihkMmQscjEpIn0= -->
+<pre class="r"><code>r2&lt;-radiation(d2d,r1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Then find the paths for the frozen robots (The assumption is that the
+shorter the path earlier, the shorter the path later)</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiZnJvemVuPC1mdW5jdGlvbihkcGFkLGNvZGVzKXtcbiAgcHE8LXByaW9yaXR5X3F1ZXVlKClcbiAgIyMjIyBzbWFsbGVzdCBsZW5ndGhcbiAgc2hvcnRlc3Q8LUluZlxuICBzbWFsbGVzdDwtbGlzdCgpXG4gIGZvcihpIGluIDE6bGVuZ3RoKGNvZGVzKSl7XG4gICAgeDwtY29kZXNbW2ldXVxuICAgICMjIyBwdXNoaW5nIHRoZSBjdXJyZW50LCB0aGUgb3V0cHV0LCBhbmQgdGhlIFxuICAgIHBxJHB1c2goYyhzdHJfYyhcIkFcIix4WzFdKSxcIlwiLHhbMToyXSksLW5jaGFyKHhbMV0pKX1cbiAgICB3aGlsZShwcSRzaXplKCk+MCl7XG4gICAgICBjZGU8LXBxJHBvcCgpXG4gICAgICAjIyMgY2hlY2sgdG8gc2VlIGlmIHRoaXMgaGFzIHdvcmtlZCBpdHMgd2F5IHRocm91Z2ggdGhlIHNlcXVlbmNlXG4gICAgICBpZihuY2hhcihjZGVbMl0pPnNob3J0ZXN0KXtuZXh0fVxuICAgICAgaWYobmNoYXIoY2RlWzFdKT09MSl7XG4gICAgICAgICMjIyBpZiB0aGlzIGlzIHRoZSBzaG9ydGVzdCwgdXBkYXRlIGV2ZXJ5dGhpbmdcbiAgICAgICAgaWYobmNoYXIoY2RlWzJdKTxzaG9ydGVzdCl7XG4gICAgICAgICAgc2hvcnRlc3Q8LW5jaGFyKGNkZVsyXSlcbiAgICAgICAgICBzbWFsbGVzdDwtbGlzdChjZGVbLTFdKVxuICAgICAgICAgICMjIyBpZiBpdCBpcyB0aGUgc2FtZSBsZW5ndGggYXMgdGhlIHNob3J0ZXN0IC0ga2VlcCBpdFxuICAgICAgICB9ZWxzZSBpZihuY2hhcihjZGVbMl0pPT1zaG9ydGVzdCl7XG4gICAgICAgICAgc21hbGxlc3Q8LWMoc21hbGxlc3QsbGlzdChjZGVbLTFdKSl9XG4gICAgICAgIG5leHR9XG4gICAgICAjIyMjIG90aGVyd2lzZSwgc3RhcnQgY29uc3RydWN0aW5nIHRoZSBcbiAgICAgIHg8LWRwYWQkZ2V0KHN0cl9zdWIoY2RlWzFdLGVuZD0yKSlcbiAgICAgICMjIyBmb3IgZWFjaCBwb3NzaWJsZSBwYXRoIGluIHRoZSBkaWN0aW9uYXJ5LFxuICAgICAgIyMjIHB1c2ggdGhlIGNvZGUgd2l0aG91dCB0aGUgZmlyc3QgY2hhcmFjdGVyIGFuZCBhZGQgdGhlIG1vdmVzIHRvIHRoZSBlbmQgb2YgdGhlIHNlcXVlbmNlIG9mIG1vdmVzIFxuICAgICAgZm9yKGkgaW4gMTpsZW5ndGgoeCkpe1xuICAgICAgICBwcSRwdXNoKGMoc3RyX3N1YihjZGVbMV0sc3RhcnQ9Miksc3RyX2MoY2RlWzJdLHhbaV0pLGNkZVstYygxOjIpXSksLShuY2hhcihjZGVbMV0pK25jaGFyKGNkZVsyXSkrbmNoYXIoeFtpXSkpKX19ICAgICBcbiAgICBzaG9ydGVzdH0ifQ== -->
+<pre class="r"><code>frozen&lt;-function(dpad,codes){
   pq&lt;-priority_queue()
-  ## tracing y,x,cheatstart,cheatstop,cheatsteps,steps
-  pq$push(c(sy,sx,-100,-100,0,0),0)
-  racetime&lt;-c()
-  while(pq$size()&gt;0){
-    curr&lt;-pq$pop()
-    #### if been cheating too long, stop
-    if(curr[5]&gt;19){next}
-    ### been there
-    if(beenthere$has(str_flatten(curr[1:4],&quot;~&quot;))){next}
-    beenthere$set(str_flatten(curr[1:4],&quot;~&quot;),0)
-    ### if you have not cheated yet
-    if(curr[3]==-100){
-      #### find out if this is a space that gets cheated to
-      if(cheattime$has(str_flatten(curr[1:2],&quot;~&quot;))){
-        ### if so, figure out the bonus and add that to the cheatbonus list
-        cb&lt;-curr[6]-cheattime$get(str_flatten(curr[1:2],&quot;~&quot;))
-        cheatbonus&lt;-c(cheatbonus,cb)}
-      ### if at the end - return all of the cheat bonuses
-      if(all(curr[1:2]==c(ey,ex))){
-        return(cheatbonus)}
-      #### Otherwise, check all 4 directions.  In each direction,
-      ##### start cheating in that direction.
-      ##### also, with no wall, go there without cheating.
-      ##up
-      if(curr[1]&gt;1){
-        if(trk$has(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;))){
-          pq$push(c(curr[1]-1,curr[2],-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1]-1,curr[2]))))}
-          pq$push(c(curr[1]-1,curr[2],curr[1],curr[2],1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[1],curr[2]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;),default=c()),curr[6]+1))
-          }
-      ##down
-      if(curr[1]&lt;maxy){
-        if(trk$has(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;))){
-          pq$push(c(curr[1]+1,curr[2],-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1]+1,curr[2]))))}
-          pq$push(c(curr[1]+1,curr[2],curr[1],curr[2],1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[1],curr[2]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;),default=c()),curr[6]+1))
-          }
-      ##left
-      if(curr[2]&gt;1){
-        if(trk$has(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;))){
-          pq$push(c(curr[1],curr[2]-1,-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1],curr[2]-1))))}
-          pq$push(c(curr[1],curr[2]-1,curr[1],curr[2],1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[1],curr[2]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;),default=c()),curr[6]+1))
-      }
-      ##right
-      if(curr[2]&lt;maxx){
-        if(trk$has(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;))){
-          pq$push(c(curr[1],curr[2]+1,-100,-100,0,curr[6]+1),-sum(curr[6],abs(c(ey,ex)-c(curr[1],curr[2]+1))))}
-          pq$push(c(curr[1],curr[2]+1,curr[1],curr[2],1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[1],curr[2]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;),default=c()),curr[6]+1))
-          }
-      ### if you are cheating, check to see if over 20 steps. If so, too many, stop
-      ### In each direction, add to the cheattime ledger *and* keepgoing
-    }else{
-      if(curr[1]&gt;1){
-        if(!cheatpath$has(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),&quot;~&quot;))){
-          pq$push(c(curr[1]-1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1]-1,curr[2],curr[3],curr[4]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]-1,curr[2]),&quot;~&quot;),default=c()),curr[6]+1))}}
-      ### down
-      if(curr[1]&lt;maxy){
-        if(!cheatpath$has(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),&quot;~&quot;))){
-          pq$push(c(curr[1]+1,curr[2],curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1]+1,curr[2],curr[3],curr[4]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1]+1,curr[2]),&quot;~&quot;),default=c()),curr[6]+1))}}
-      ### left
-      if(curr[2]&gt;1){
-        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),&quot;~&quot;))){
-          pq$push(c(curr[1],curr[2]-1,curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1],curr[2]-1,curr[3],curr[4]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]-1),&quot;~&quot;),default=c()),curr[6]+1))}}
-      ### right
-      if(curr[2]&lt;maxx){
-        if(!cheatpath$has(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),&quot;~&quot;))){
-          pq$push(c(curr[1],curr[2]+1,curr[3],curr[4],curr[5]+1,curr[6]+1),500-curr[6])
-          cheatpath$set(str_flatten(c(curr[1],curr[2]+1,curr[3],curr[4]),&quot;~&quot;),0)
-          cheattime$set(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;),c(cheattime$get(str_flatten(c(curr[1],curr[2]+1),&quot;~&quot;),default=c()),curr[6]+1))}}
-    }
-  }# closing while
-}</code></pre>
+  #### smallest length
+  shortest&lt;-Inf
+  smallest&lt;-list()
+  for(i in 1:length(codes)){
+    x&lt;-codes[[i]]
+    ### pushing the current, the output, and the 
+    pq$push(c(str_c(&quot;A&quot;,x[1]),&quot;&quot;,x[1:2]),-nchar(x[1]))}
+    while(pq$size()&gt;0){
+      cde&lt;-pq$pop()
+      ### check to see if this has worked its way through the sequence
+      if(nchar(cde[2])&gt;shortest){next}
+      if(nchar(cde[1])==1){
+        ### if this is the shortest, update everything
+        if(nchar(cde[2])&lt;shortest){
+          shortest&lt;-nchar(cde[2])
+          smallest&lt;-list(cde[-1])
+          ### if it is the same length as the shortest - keep it
+        }else if(nchar(cde[2])==shortest){
+          smallest&lt;-c(smallest,list(cde[-1]))}
+        next}
+      #### otherwise, start constructing the 
+      x&lt;-dpad$get(str_sub(cde[1],end=2))
+      ### for each possible path in the dictionary,
+      ### push the code without the first character and add the moves to the end of the sequence of moves 
+      for(i in 1:length(x)){
+        pq$push(c(str_sub(cde[1],start=2),str_c(cde[2],x[i]),cde[-c(1:2)]),-(nchar(cde[1])+nchar(cde[2])+nchar(x[i])))}}     
+    shortest}</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbInAyPC1sb25nY2hlYXQocmFjZXRyYWNrLHJhY2VzdGFydFsxXSxyYWNlc3RhcnRbMl0scmFjZWVuZFsxXSxyYWNlZW5kWzJdLG1heHksbWF4eCkiLCJwYXJ0MjwtbGVuZ3RoKHdoaWNoKHAyPj0xMDApKSIsInBhcnQyIl19 -->
-<pre class="r"><code>p2&lt;-longcheat(racetrack,racestart[1],racestart[2],raceend[1],raceend[2],maxy,maxx)
-part2&lt;-length(which(p2&gt;=100))
+<!-- rnb-source-begin eyJkYXRhIjpbInIzPC1mcm96ZW4oZDJkLHIyKSIsInIzIl19 -->
+<pre class="r"><code>r3&lt;-frozen(d2d,r2)
+r3</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDY4XG4ifQ== -->
+<pre><code>[1] 68</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>For part 1, run through each function and then multiply by the
+numerical values in the initial code.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoicGFydDE8LXNhcHBseShjKFwiMDI5QVwiLFwiOTgwQVwiLFwiMTc5QVwiLFwiNDU2QVwiLFwiMzc5QVwiKSxmdW5jdGlvbih4KXtcbiAgcjE8LW5vcHJlc3N1cmUoZDJuLHgpXG4gIHIyPC1yYWRpYXRpb24oZDJkLHIxKVxuICByMzwtZnJvemVuKGQyZCxyMilcbiAgbnVtczwtYXMubnVtZXJpYyhzdHJfZmxhdHRlbih1bmxpc3Qoc3RyX2V4dHJhY3RfYWxsKHgsXCJbOmRpZ2l0Ol1cIikpKSlcbiAgY3BseDwtcjMqbnVtc1xuICBjYXQoeCxcIi1cIixsZW5ndGgocjEpLFwiLVwiLGxlbmd0aChyMiksXCItXCIscjMsXCItXCIsY3BseCxcIlxcblwiKVxuICBjcGx4fSkifQ== -->
+<pre class="r"><code>part1&lt;-sapply(c(&quot;029A&quot;,&quot;980A&quot;,&quot;179A&quot;,&quot;456A&quot;,&quot;379A&quot;),function(x){
+  r1&lt;-nopressure(d2n,x)
+  r2&lt;-radiation(d2d,r1)
+  r3&lt;-frozen(d2d,r2)
+  nums&lt;-as.numeric(str_flatten(unlist(str_extract_all(x,&quot;[:digit:]&quot;))))
+  cplx&lt;-r3*nums
+  cat(x,&quot;-&quot;,length(r1),&quot;-&quot;,length(r2),&quot;-&quot;,r3,&quot;-&quot;,cplx,&quot;\n&quot;)
+  cplx})</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiMDI5QSAtIDIgLSAxNiAtIDY4IC0gMTk3MiBcbjk4MEEgLSAxIC0gNCAtIDYwIC0gNTg4MDAgXG4xNzlBIC0gMSAtIDQgLSA2OCAtIDEyMTcyIFxuNDU2QSAtIDEgLSA0IC0gNjQgLSAyOTE4NCBcbjM3OUEgLSAyIC0gOCAtIDY0IC0gMjQyNTYgXG4ifQ== -->
+<pre><code>029A - 2 - 16 - 68 - 1972 
+980A - 1 - 4 - 60 - 58800 
+179A - 1 - 4 - 68 - 12172 
+456A - 1 - 4 - 64 - 29184 
+379A - 2 - 8 - 64 - 24256 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoic3VtKHBhcnQxKSJ9 -->
+<pre class="r"><code>sum(part1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEyNjM4NFxuIn0= -->
+<pre><code>[1] 126384</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="part-2" class="section level3">
+<h3>Part 2</h3>
+<p>Obviously this is too much to do 26 times. So recursively</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjpbImZpbmRzaG9ydGVzdDwtZnVuY3Rpb24obG9uZ2NvZGUsZGN0LHJlcCl7XG4gICMjIyNpZiB0aGUgb25seSBjb2RlIGlzIFwiQVwiIHJldHVybiAwIFxuICBpZihsb25nY29kZT09XCJBXCIpe3JldHVybigwKVxuICAgICMjIyBpZiB0aGVyZSBhcmUgb25seSB0d28gY2hhcmFjdGVycywgcmV0dXJuIHRoZSBudW1iZXIgb2Yga2V5cyB5b3UgbmVlZCB0byBwcmVzcyB0byBnZXQgZnJvbSB0aGF0IGNoYXJhY3RlciB0byB0aGUgbmV4dFxuICB9ZWxzZSBpZihuY2hhcihsb25nY29kZSk9PTIpe1xuICAgIHJldHVybihtZW1kYmwobG9uZ2NvZGUsZGN0LHJlcCkpXG4gICAgIyMjIG90aGVyd2lzZSwgcmV0dXJuIHRoZSBzdW0gb2YgdGhlIGZpcnN0IHR3byBjaGFyYWN0ZXJzIGFuZCB0aGUgbnVtYmVyIG9mIGtleXMgdG8gcHJlc3MgZm9yIHRoZSByZW1haW5kZXIgb2YgdGhlIHN0cmluZy4gXG4gIH1lbHNle1xuICAgIHJldHVybihzdW0obWVtZGJsKHN0cl9zdWIobG9uZ2NvZGUsZW5kPTIpLGRjdCxyZXApLFxuICAgICAgICAgICAgICAgZmluZHNob3J0ZXN0KHN0cl9zdWIobG9uZ2NvZGUsc3RhcnQ9MilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAsZGN0XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLHJlcCkpKX19IiwiIiwiZGJsc2hvcnQ8LWZ1bmN0aW9uKHByLGRjdCxyZXApe1xuICAjIyMgaWYgdGhpcyBpcyB0aGUgZmluYWwgcmVwZWF0LCByZXR1cm4gdGhlIG51bWJlciBvZiBjaGFyYWN0ZXJzIGZvciB0aGF0IGtleSBzZXF1ZW5jZVxuICBpZihyZXA9PTEpe1xuICAgIHJldHVybihtaW4obmNoYXIoZGN0JGdldChwcikpKSlcbiAgfWVsc2V7XG4gICAgIyMjIG90aGVyd2lzZSwgZ2V0IGFsbCBvZiB0aGUgb3B0aW9ucyBmb3IgdGhhdCBrZXkgc2VxdWVuY2VcbiAgICAjIyMgZm9yIGVhY2ggb2YgdGhlbSwgcnVuIGZpbmRzaG9ydGVzdCgpIHdpdGggb25lIGZld2VyIHJlcGVhdFxuICAgICMjIyB0YWtlIHRoZSBtaW5pbXVtLlxuICAgIHJldHVybihtaW4oc2FwcGx5KGRjdCRnZXQocHIpLGZ1bmN0aW9uKHgpe2ZpbmRzaG9ydGVzdChzdHJfYyhcIkFcIix4KSxkY3QscmVwLTEpfSkpKX19IiwiIiwiIyMjIG1lbW9pc2UgZGJsZXNob3J0IC0gYmVjYXVzZSBvdGhlcndpc2UgdGhpcyB0YWtlcyB0b28gbG9uZyIsIm1lbWRibDwtbWVtb2lzZShkYmxzaG9ydCkiXX0= -->
+<pre class="r"><code>findshortest&lt;-function(longcode,dct,rep){
+  ####if the only code is &quot;A&quot; return 0 
+  if(longcode==&quot;A&quot;){return(0)
+    ### if there are only two characters, return the number of keys you need to press to get from that character to the next
+  }else if(nchar(longcode)==2){
+    return(memdbl(longcode,dct,rep))
+    ### otherwise, return the sum of the first two characters and the number of keys to press for the remainder of the string. 
+  }else{
+    return(sum(memdbl(str_sub(longcode,end=2),dct,rep),
+               findshortest(str_sub(longcode,start=2)
+                            ,dct
+                            ,rep)))}}
+
+dblshort&lt;-function(pr,dct,rep){
+  ### if this is the final repeat, return the number of characters for that key sequence
+  if(rep==1){
+    return(min(nchar(dct$get(pr))))
+  }else{
+    ### otherwise, get all of the options for that key sequence
+    ### for each of them, run findshortest() with one fewer repeat
+    ### take the minimum.
+    return(min(sapply(dct$get(pr),function(x){findshortest(str_c(&quot;A&quot;,x),dct,rep-1)})))}}
+
+### memoise dbleshort - because otherwise this takes too long
+memdbl&lt;-memoise(dblshort)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>With that in place, use those, plus the nopressure() from above (for
+the digital keypad) and multiply it by the numeric value.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiaG93Y29tcGxleDwtZnVuY3Rpb24oY29kZSxuZGljdCxkZGljdCxyZXBzKXtcbiAgIyMjIGZpcnN0IGZpbmQgaG93IHRoZSBkZXByZXNzdXJpemVkIHJvYm90IG5lZWRzIHRvIG1vdmUgYW5kIFxuICBwcmVzc3VyZWxlc3M8LXN0cl9jKFwiQVwiLG5vcHJlc3N1cmUobmRpY3QsY29kZSkpXG4gIGZld2VzdHByZXNzZXM8LW1pbihzYXBwbHkocHJlc3N1cmVsZXNzLGZ1bmN0aW9uKHgpe2ZpbmRzaG9ydGVzdCh4LGRkaWN0LHJlcHMpfSkpXG4gIG51bXM8LWFzLm51bWVyaWMoc3RyX2ZsYXR0ZW4odW5saXN0KHN0cl9leHRyYWN0X2FsbChjb2RlLFwiWzpkaWdpdDpdXCIpKSkpXG4gIGZld2VzdHByZXNzZXMqbnVtc30ifQ== -->
+<pre class="r"><code>howcomplex&lt;-function(code,ndict,ddict,reps){
+  ### first find how the depressurized robot needs to move and 
+  pressureless&lt;-str_c(&quot;A&quot;,nopressure(ndict,code))
+  fewestpresses&lt;-min(sapply(pressureless,function(x){findshortest(x,ddict,reps)}))
+  nums&lt;-as.numeric(str_flatten(unlist(str_extract_all(code,&quot;[:digit:]&quot;))))
+  fewestpresses*nums}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjpbInAyPC1zYXBwbHkoYyhcIjAyOUFcIixcIjk4MEFcIixcIjE3OUFcIixcIjQ1NkFcIixcIjM3OUFcIiksZnVuY3Rpb24oeCl7aG93Y29tcGxleCh4LGQybixkMmQsMjUpfSkiLCJwYXJ0Mjwtc3VtKHAyKSIsInBhcnQyIl19 -->
+<pre class="r"><code>p2&lt;-sapply(c(&quot;029A&quot;,&quot;980A&quot;,&quot;179A&quot;,&quot;456A&quot;,&quot;379A&quot;),function(x){howcomplex(x,d2n,d2d,25)})
+part2&lt;-sum(p2)
 part2</code></pre>
 <!-- rnb-source-end -->
-
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDBcbiJ9 -->
-<pre><code>[1] 0</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoidGFibGUocDJbd2hpY2gocDI+PTUwKV0pIn0= -->
-<pre class="r"><code>table(p2[which(p2&gt;=50)])</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG41MCA1MiA1NCA1NiA1OCA2MCA2MiA2NCA2NiA2OCA3MCA3MiA3NCA3NiBcbjMyIDMxIDI5IDM5IDI1IDIzIDIwIDE5IDEyIDE0IDEyIDIyICA0ICAzIFxuIn0= -->
-<pre><code>
-50 52 54 56 58 60 62 64 66 68 70 72 74 76 
-32 31 29 39 25 23 20 19 12 14 12 22  4  3 </code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE1NDExNTcwODExNjI5NFxuIn0= -->
+<pre><code>[1] 154115708116294</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRheSAyMCBOb3RlYm9vayINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0KbGlicmFyeShnZ3Bsb3QyKQ0KbGlicmFyeShyZXNoYXBlMikNCmxpYnJhcnkoa25pdHIpDQpsaWJyYXJ5KGRwbHlyKQ0KbGlicmFyeShzdHJpbmdyKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHJlYWRyKQ0KbGlicmFyeShjb2xsZWN0aW9ucykNCm9wdGlvbnMoc2NpcGVuID0gOTk5KQ0KYGBgDQoNCmBgYHtyfQ0KaW5wdXQ8LXJlYWRfbGluZXMoIkRheTIwU2FtcGxlLnR4dCIpDQoNCnJhY2V0cmFjazwtZGljdCgpDQojIyMgUHV0IHZhbGlkIHNwYWNlcyBpbnRvIGEgZGljdGlvbmFyeQ0KZm9yKGkgaW4gMTpsZW5ndGgoaW5wdXQpKXsNCiAgeDwtdW5saXN0KHN0cl9zcGxpdChpbnB1dFtpXSwiIikpDQogIGZvcihqIGluIDE6bGVuZ3RoKHgpKXsNCiAgICBpZih4W2pdIT0iIyIpew0KICAgICAgcmFjZXRyYWNrJHNldChzdHJfZmxhdHRlbihjKGksaiksIn4iKSwwKX0NCiAgICBpZih4W2pdPT0iUyIpe3JhY2VzdGFydDwtYyhpLGopfQ0KICAgIGlmKHhbal09PSJFIil7cmFjZWVuZDwtYyhpLGopfX19DQptYXh5PC1sZW5ndGgoaW5wdXQpDQptYXh4PC1sZW5ndGgoeCkNCmBgYA0KDQoNCiMjIFBhcnQgMQ0KV2hlbiBzb21lb25lIGNoZWF0cyB0aHJvdWdoIGEgd2FsbCwgbm90ZSB0aGUgdGltZSB0aGV5IGVtZXJnZWQgZnJvbSB0aGUgd2FsbCAtIHdoZW4gKGxhdGVyKSB0aGUgbm9uLWNoZWF0aW5nIHBlcnNvbiBwYXNzZXMgdGhhdCBwbGFjZSwgcmVjb3JkIGhvdyBsb25nIGl0IHRvb2sgZnJvbSB0aGUgbW9tZW50IG9mIGNoZWF0aW5nIHVudGlsIHRoZW4uDQpUYWxseSB0aG9zZS4NCg0KYGBge3J9DQpjaGVhdGVyY2hlYXRlcjwtZnVuY3Rpb24odHJrLHN5LHN4LGV5LGV4LG1heHksbWF4eCl7DQogIGJlZW50aGVyZTwtZGljdCgpDQogIGNoZWF0dGltZTwtZGljdCgpDQogIGNoZWF0Ym9udXM8LWMoKQ0KICBwcTwtcHJpb3JpdHlfcXVldWUoKQ0KICAjIyB0cmFjaW5nIHkseCxzdGVwcw0KICBwcSRwdXNoKGMoc3ksc3gsMCksMCkNCiAgcmFjZXRpbWU8LWMoKQ0KICB3aGlsZShwcSRzaXplKCk+MCl7DQogICAgY3VycjwtcHEkcG9wKCkNCiAgICAjIyMgYmVlbiB0aGVyZT8NCiAgICBpZihiZWVudGhlcmUkaGFzKHN0cl9mbGF0dGVuKGN1cnJbMToyXSwifiIpKSl7bmV4dH0NCiAgICBiZWVudGhlcmUkc2V0KHN0cl9mbGF0dGVuKGN1cnJbMToyXSwifiIpLDApDQogICAgIyMjIGZpbmQgb3V0IGlmIHRoaXMgaXMgYSBjaGVhdGluZyBleGl0DQogICAgaWYoY2hlYXR0aW1lJGhhcyhzdHJfZmxhdHRlbihjdXJyWzE6Ml0sIn4iKSkpew0KICAgICAgIyMjIGlmIHNvLCBmaWd1cmUgb3V0IHlvdXIgYm9udXMgYW5kIGFkZCB0aGF0IHRvIHRoZSBjaGVhdGJvbnVzIGxpc3QNCiAgICAgIGNiPC1jdXJyWzNdLWNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oY3VyclsxOjJdLCJ+IikpDQogICAgICBjaGVhdGJvbnVzPC1jKGNoZWF0Ym9udXMsY2IpfQ0KICAgICMjIyBpZiBhdCB0aGUgZW5kIC0gcmV0dXJuIGFsbCBvZiB0aGUgY2hlYXQgYm9udXNlcw0KICAgIGlmKGFsbChjdXJyWzE6Ml09PWMoZXksZXgpKSl7DQogICAgICByZXR1cm4oY2hlYXRib251cyl9DQogICAgIyMjIyBPdGhlcndpc2UsIGNoZWNrIGFsbCA0IGRpcmVjdGlvbnMuICBJbiBlYWNoIGRpcmVjdGlvbiwNCiAgICAjIyMjIyBpZiB0aGVyZSBpc24ndCBhIHdhbGwsIGdvIHRoZXJlLg0KICAgICMjIyMjIGlmIHRoZXJlIGlzIGEgd2FsbCwgIGZvciBlYWNoIGRpcmVjdGlvbiBvdXQgb2YgdGhlIHdhbGwsIHB1dCB0aGUgdGltZSB5b3Ugd291bGQgaGF2ZSBjaGVhdGVkIHRvIHRoYXQgcG9pbnQNCiAgICAjI3VwDQogICAgaWYoY3VyclsxXT4xKXsNCiAgICAgIGlmKHRyayRoYXMoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSksIn4iKSkpew0KICAgICAgICBwcSRwdXNoKGMoY3VyclsxXS0xLGN1cnJbMl0sY3VyclszXSsxKSwtc3VtKDEsY3VyclszXSxhYnMoYyhleSxleCktYyhjdXJyWzFdLTEsY3VyclsyXSkpKSkNCiAgICAgIH1lbHNlew0KICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTIsY3VyclsyXSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTIsY3VyclsyXSksIn4iKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0rMSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSsxKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKQ0KICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXS0xKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdLTEpLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpfX0NCiAgICAjI2Rvd24NCiAgICBpZihjdXJyWzFdPG1heHkpew0KICAgICAgaWYodHJrJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKSwifiIpKSl7DQogICAgICAgIHBxJHB1c2goYyhjdXJyWzFdKzEsY3VyclsyXSxjdXJyWzNdKzEpLC1zdW0oMSxjdXJyWzNdLGFicyhjKGV5LGV4KS1jKGN1cnJbMV0rMSxjdXJyWzJdKSkpKQ0KICAgICAgfWVsc2V7DQogICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMixjdXJyWzJdKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMixjdXJyWzJdKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKQ0KICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSsxKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdKzEpLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpDQogICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdLTEpLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0tMSksIn4iKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSl9fQ0KICAgICMjbGVmdA0KICAgIGlmKGN1cnJbMl0+MSl7DQogICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLCJ+IikpKXsNCiAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXS0xLGN1cnJbM10rMSksLXN1bSgxLGN1cnJbM10sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdLTEpKSkpDQogICAgICB9ZWxzZXsNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTIpLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTIpLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbM10rMikpDQogICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0tMSxjdXJyWzJdLTEpLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0tMSksIn4iKSxkZWZhdWx0PWMoKSksY3VyclszXSsyKSkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0tMSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXS0xKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKX19DQogICAgIyNyaWdodA0KICAgIGlmKGN1cnJbMl08bWF4eCl7DQogICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEpLCJ+IikpKXsNCiAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXSsxLGN1cnJbM10rMSksLXN1bSgxLGN1cnJbM10sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdKzEpKSkpDQogICAgICB9ZWxzZXsNCiAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsyKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsyKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKQ0KICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0rMSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSsxKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKQ0KICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0rMSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSsxKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzNdKzIpKX19DQoNCn0NCnJhY2V0aW1lfQ0KYGBgDQoNCmBgYHtyfQ0KcDE8LWNoZWF0ZXJjaGVhdGVyKHJhY2V0cmFjayxyYWNlc3RhcnRbMV0scmFjZXN0YXJ0WzJdLHJhY2VlbmRbMV0scmFjZWVuZFsyXSxtYXh5LG1heHgpDQp0YWJsZShwMSkNCiNwYXJ0MTwtbGVuZ3RoKHdoaWNoKHAxPj0xMDApKQ0KI3BhcnQxDQpgYGANCg0KDQojIyBQYXJ0IDINClNtYWxsIGNoYW5nZSAtIHRoZXJlIGFyZSB0d28gc2VwYXJhdGUgc2V0cyBvZiBydWxlcywgb25lIGZvciB3aGlsZSB5b3UncmUgY2hlYXRpbmcsIG9uZSBmb3IgdGhlIHBhdGggdGhhdCBoYXNuJ3QgY2hlYXRlZCB5ZXQuIFRvIG1ha2Ugc3VyZSB0aGF0IGFsbCB0aGUgY2hlYXRzIGFyZSBpbiBwbGFjZSBiZWZvcmUgdGhlIG5vbi1jaGVhdCBnZXRzIHRoZXJlLCB0aGV5IHJ1biBmaXJzdC4NClRoZSBzYW1lIGlkZWEsIHRob3VnaCAtIHRpbWUgcmVjb3JkZWQgd2hlbiBjaGVhdGluZyBzdG9wcyBhdCB0aGUgcGxhY2UgdGhlIGNoZWF0aW5nIHN0b3BzLg0KDQpUbyBiZSBmYWlyIC0gdGhpcyBpcyBub3QgZmFzdCBhbmQgY291bGQgYmUgZG9uZSBmYXN0ZXIgZGlmZmVyZW50bHkuDQoNCg0KDQpgYGB7cn0NCmxvbmdjaGVhdDwtZnVuY3Rpb24odHJrLHN5LHN4LGV5LGV4LG1heHksbWF4eCl7DQogIGJlZW50aGVyZTwtZGljdCgpDQogIGNoZWF0dGltZTwtZGljdCgpDQogIGNoZWF0cGF0aDwtZGljdCgpDQogIGNoZWF0Ym9udXM8LWMoKQ0KICBwcTwtcHJpb3JpdHlfcXVldWUoKQ0KICAjIyB0cmFjaW5nIHkseCxjaGVhdHN0YXJ0LGNoZWF0c3RvcCxjaGVhdHN0ZXBzLHN0ZXBzDQogIHBxJHB1c2goYyhzeSxzeCwtMTAwLC0xMDAsMCwwKSwwKQ0KICByYWNldGltZTwtYygpDQogIHdoaWxlKHBxJHNpemUoKT4wKXsNCiAgICBjdXJyPC1wcSRwb3AoKQ0KICAgICMjIyMgaWYgYmVlbiBjaGVhdGluZyB0b28gbG9uZywgc3RvcA0KICAgIGlmKGN1cnJbNV0+MTkpe25leHR9DQogICAgIyMjIGJlZW4gdGhlcmUNCiAgICBpZihiZWVudGhlcmUkaGFzKHN0cl9mbGF0dGVuKGN1cnJbMTo0XSwifiIpKSl7bmV4dH0NCiAgICBiZWVudGhlcmUkc2V0KHN0cl9mbGF0dGVuKGN1cnJbMTo0XSwifiIpLDApDQogICAgIyMjIGlmIHlvdSBoYXZlIG5vdCBjaGVhdGVkIHlldA0KICAgIGlmKGN1cnJbM109PS0xMDApew0KICAgICAgIyMjIyBmaW5kIG91dCBpZiB0aGlzIGlzIGEgc3BhY2UgdGhhdCBnZXRzIGNoZWF0ZWQgdG8NCiAgICAgIGlmKGNoZWF0dGltZSRoYXMoc3RyX2ZsYXR0ZW4oY3VyclsxOjJdLCJ+IikpKXsNCiAgICAgICAgIyMjIGlmIHNvLCBmaWd1cmUgb3V0IHRoZSBib251cyBhbmQgYWRkIHRoYXQgdG8gdGhlIGNoZWF0Ym9udXMgbGlzdA0KICAgICAgICBjYjwtY3Vycls2XS1jaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGN1cnJbMToyXSwifiIpKQ0KICAgICAgICBjaGVhdGJvbnVzPC1jKGNoZWF0Ym9udXMsY2IpfQ0KICAgICAgIyMjIGlmIGF0IHRoZSBlbmQgLSByZXR1cm4gYWxsIG9mIHRoZSBjaGVhdCBib251c2VzDQogICAgICBpZihhbGwoY3VyclsxOjJdPT1jKGV5LGV4KSkpew0KICAgICAgICByZXR1cm4oY2hlYXRib251cyl9DQogICAgICAjIyMjIE90aGVyd2lzZSwgY2hlY2sgYWxsIDQgZGlyZWN0aW9ucy4gIEluIGVhY2ggZGlyZWN0aW9uLA0KICAgICAgIyMjIyMgc3RhcnQgY2hlYXRpbmcgaW4gdGhhdCBkaXJlY3Rpb24uDQogICAgICAjIyMjIyBhbHNvLCB3aXRoIG5vIHdhbGwsIGdvIHRoZXJlIHdpdGhvdXQgY2hlYXRpbmcuDQogICAgICAjI3VwDQogICAgICBpZihjdXJyWzFdPjEpew0KICAgICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLCJ+IikpKXsNCiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXS0xLGN1cnJbMl0sLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXS0xLGN1cnJbMl0pKSkpfQ0KICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKQ0KICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0pLCJ+IiksMCkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpDQogICAgICAgICAgfQ0KICAgICAgIyNkb3duDQogICAgICBpZihjdXJyWzFdPG1heHkpew0KICAgICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLCJ+IikpKXsNCiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSsxLGN1cnJbMl0sLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXSsxLGN1cnJbMl0pKSkpfQ0KICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdKzEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKQ0KICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSxjdXJyWzFdLGN1cnJbMl0pLCJ+IiksMCkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSsxLGN1cnJbMl0pLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpDQogICAgICAgICAgfQ0KICAgICAgIyNsZWZ0DQogICAgICBpZihjdXJyWzJdPjEpew0KICAgICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLCJ+IikpKXsNCiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdLTEsLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdLTEpKSkpfQ0KICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLGN1cnJbMl0tMSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKQ0KICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0tMSxjdXJyWzFdLGN1cnJbMl0pLCJ+IiksMCkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEpLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpDQogICAgICB9DQogICAgICAjI3JpZ2h0DQogICAgICBpZihjdXJyWzJdPG1heHgpew0KICAgICAgICBpZih0cmskaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEpLCJ+IikpKXsNCiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXSxjdXJyWzJdKzEsLTEwMCwtMTAwLDAsY3Vycls2XSsxKSwtc3VtKGN1cnJbNl0sYWJzKGMoZXksZXgpLWMoY3VyclsxXSxjdXJyWzJdKzEpKSkpfQ0KICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdLGN1cnJbMl0rMSxjdXJyWzFdLGN1cnJbMl0sMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKQ0KICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLGN1cnJbMl0rMSxjdXJyWzFdLGN1cnJbMl0pLCJ+IiksMCkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEpLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEpLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpDQogICAgICAgICAgfQ0KICAgICAgIyMjIGlmIHlvdSBhcmUgY2hlYXRpbmcsIGNoZWNrIHRvIHNlZSBpZiBvdmVyIDIwIHN0ZXBzLiBJZiBzbywgdG9vIG1hbnksIHN0b3ANCiAgICAgICMjIyBJbiBlYWNoIGRpcmVjdGlvbiwgYWRkIHRvIHRoZSBjaGVhdHRpbWUgbGVkZ2VyICphbmQqIGtlZXBnb2luZw0KICAgIH1lbHNlew0KICAgICAgaWYoY3VyclsxXT4xKXsNCiAgICAgICAgaWYoIWNoZWF0cGF0aCRoYXMoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0pLCJ+IikpKXsNCiAgICAgICAgICBwcSRwdXNoKGMoY3VyclsxXS0xLGN1cnJbMl0sY3VyclszXSxjdXJyWzRdLGN1cnJbNV0rMSxjdXJyWzZdKzEpLDUwMC1jdXJyWzZdKQ0KICAgICAgICAgIGNoZWF0cGF0aCRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdLTEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0pLCJ+IiksMCkNCiAgICAgICAgICBjaGVhdHRpbWUkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLCJ+IiksYyhjaGVhdHRpbWUkZ2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXS0xLGN1cnJbMl0pLCJ+IiksZGVmYXVsdD1jKCkpLGN1cnJbNl0rMSkpfX0NCiAgICAgICMjIyBkb3duDQogICAgICBpZihjdXJyWzFdPG1heHkpew0KICAgICAgICBpZighY2hlYXRwYXRoJGhhcyhzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdLGN1cnJbM10sY3Vycls0XSksIn4iKSkpew0KICAgICAgICAgIHBxJHB1c2goYyhjdXJyWzFdKzEsY3VyclsyXSxjdXJyWzNdLGN1cnJbNF0sY3Vycls1XSsxLGN1cnJbNl0rMSksNTAwLWN1cnJbNl0pDQogICAgICAgICAgY2hlYXRwYXRoJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0rMSxjdXJyWzJdLGN1cnJbM10sY3Vycls0XSksIn4iKSwwKQ0KICAgICAgICAgIGNoZWF0dGltZSRzZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSksIn4iKSxjKGNoZWF0dGltZSRnZXQoc3RyX2ZsYXR0ZW4oYyhjdXJyWzFdKzEsY3VyclsyXSksIn4iKSxkZWZhdWx0PWMoKSksY3Vycls2XSsxKSl9fQ0KICAgICAgIyMjIGxlZnQNCiAgICAgIGlmKGN1cnJbMl0+MSl7DQogICAgICAgIGlmKCFjaGVhdHBhdGgkaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEsY3VyclszXSxjdXJyWzRdKSwifiIpKSl7DQogICAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXS0xLGN1cnJbM10sY3Vycls0XSxjdXJyWzVdKzEsY3Vycls2XSsxKSw1MDAtY3Vycls2XSkNCiAgICAgICAgICBjaGVhdHBhdGgkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdLTEsY3VyclszXSxjdXJyWzRdKSwifiIpLDApDQogICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXS0xKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXS0xKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzZdKzEpKX19DQogICAgICAjIyMgcmlnaHQNCiAgICAgIGlmKGN1cnJbMl08bWF4eCl7DQogICAgICAgIGlmKCFjaGVhdHBhdGgkaGFzKHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEsY3VyclszXSxjdXJyWzRdKSwifiIpKSl7DQogICAgICAgICAgcHEkcHVzaChjKGN1cnJbMV0sY3VyclsyXSsxLGN1cnJbM10sY3Vycls0XSxjdXJyWzVdKzEsY3Vycls2XSsxKSw1MDAtY3Vycls2XSkNCiAgICAgICAgICBjaGVhdHBhdGgkc2V0KHN0cl9mbGF0dGVuKGMoY3VyclsxXSxjdXJyWzJdKzEsY3VyclszXSxjdXJyWzRdKSwifiIpLDApDQogICAgICAgICAgY2hlYXR0aW1lJHNldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsxKSwifiIpLGMoY2hlYXR0aW1lJGdldChzdHJfZmxhdHRlbihjKGN1cnJbMV0sY3VyclsyXSsxKSwifiIpLGRlZmF1bHQ9YygpKSxjdXJyWzZdKzEpKX19DQogICAgfQ0KICB9IyBjbG9zaW5nIHdoaWxlDQp9DQpgYGANCg0KYGBge3J9DQpwMjwtbG9uZ2NoZWF0KHJhY2V0cmFjayxyYWNlc3RhcnRbMV0scmFjZXN0YXJ0WzJdLHJhY2VlbmRbMV0scmFjZWVuZFsyXSxtYXh5LG1heHgpDQpwYXJ0MjwtbGVuZ3RoKHdoaWNoKHAyPj0xMDApKQ0KcGFydDINCnRhYmxlKHAyW3doaWNoKHAyPj01MCldKQ0KYGBg</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRheSAyMSBOb3RlYm9vayINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0KbGlicmFyeShtZW1vaXNlKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KbGlicmFyeShyZXNoYXBlMikNCmxpYnJhcnkoa25pdHIpDQpsaWJyYXJ5KGRwbHlyKQ0KbGlicmFyeShzdHJpbmdyKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHJlYWRyKQ0KbGlicmFyeShjb2xsZWN0aW9ucykNCm9wdGlvbnMoc2NpcGVuID0gOTk5KQ0KYGBgDQoNCg0KU28sIGl0IGdvZXMNCmRlcHJlc3N1cml6ZWQgcm9ib3QgPiByYWRpYXRpb24gcm9ib3QgPiBmcm96ZW4gcm9ib3QgPiBtZQ0KDQojIyBQYXJ0IDENClRoZXNlIGFyZSB0aGUgZGljdGlvbmFyaWVzIHRvIHNob3cgaG93IHRvIGdldCBmcm9tIG9uZSBrZXkgdG8gYW5vdGhlciAtIHN0YXJ0aW5nIHdpdGggdGhlIGRpZ2l0YWwga2V5cGFkDQpBc3N1bWluZyBpdCB3aWxsIGFsd2F5cywgYWx3YXlzIGJlIGZhc3RlciB0byBoaXQgdGhlIHNhbWUgYnV0dG9uIHR3aWNlIHRoYW4gdG8gY29tZSBiYWNrIHRvIGl0IGxhdGVyDQoNCmBgYHtyfQ0KZDJkPC1kaWN0KCkNCmQyZCRzZXQoIl5eIiwiQSIpDQpkMmQkc2V0KCJePCIsInY8QSIpDQpkMmQkc2V0KCJePiIsYygidj5BIiwiPnZBIikpDQpkMmQkc2V0KCJediIsInZBIikNCmQyZCRzZXQoIl5BIiwiPkEiKQ0KZDJkJHNldCgiPF4iLCI+XkEiKQ0KZDJkJHNldCgiPDwiLCJBIikNCmQyZCRzZXQoIjw+IiwiPj5BIikNCmQyZCRzZXQoIjx2IiwiPkEiKQ0KZDJkJHNldCgiPEEiLCI+Pl5BIikNCmQyZCRzZXQoIj5eIixjKCI8XkEiLCJePEEiKSkNCmQyZCRzZXQoIj48IiwiPDxBIikNCmQyZCRzZXQoIj4+IiwiQSIpDQpkMmQkc2V0KCI+diIsIjxBIikNCmQyZCRzZXQoIj5BIiwiXkEiKQ0KZDJkJHNldCgidl4iLCJeQSIpDQpkMmQkc2V0KCJ2PCIsIjxBIikNCmQyZCRzZXQoInY+IiwiPkEiKQ0KZDJkJHNldCgidnYiLCJBIikNCmQyZCRzZXQoInZBIixjKCI+XkEiLCJePkEiKSkNCmQyZCRzZXQoIkFeIiwiPEEiKQ0KZDJkJHNldCgiQTwiLCJ2PDxBIikNCmQyZCRzZXQoIkE+IiwidkEiKQ0KZDJkJHNldCgiQXYiLGMoInY8QSIsIjx2QSIpKQ0KZDJkJHNldCgiQUEiLCJBIikNCmBgYA0KDQoNCkFuZCB0aGlzIGlzIGZvciB0aGUgbnVtZXJpYyBrZXlwYWQuICBJZiBpdCBpcyBpbiBoZXJlLCBpdCBpcyBpbiBteSBkYXRhIG9yIG9uZSBvZiB0aGUgc2FtcGxlL3Rlc3QgZGF0YSBzZXRzLg0KDQpgYGB7cn0NCmQybjwtZGljdCgpDQpkMm4kc2V0KCIwMiIsIl5BIikNCmQybiRzZXQoIjA1IiwiXl5BIikNCmQybiRzZXQoIjA4IiwiXl5eQSIpDQpkMm4kc2V0KCIwQSIsIj5BIikNCmQybiRzZXQoIjEzIiwiPj5BIikNCmQybiRzZXQoIjE1IixjKCJePkEiLCI+XkEiKSkNCmQybiRzZXQoIjE3IiwiXl5BIikNCmQybiRzZXQoIjFBIixjKCI+PnZBIikpDQpkMm4kc2V0KCIxQSIsYygiPj52QSIpKQ0KZDJuJHNldCgiMjkiLGMoIj5eXkEiLCJeXj5BIikpDQpkMm4kc2V0KCIzQSIsInZBIikNCmQybiRzZXQoIjM3IixjKCJeXjw8QSIsIjw8Xl5BIikpDQpkMm4kc2V0KCI0NSIsIj5BIikNCmQybiRzZXQoIjRBIiwiPj52dkEiKQ0KZDJuJHNldCgiNTYiLCI+QSIpDQpkMm4kc2V0KCI1OSIsYygiXj5BIiwiPl5BIikpDQpkMm4kc2V0KCI1QSIsYygidnY+QSIsIj52dkEiKSkNCmQybiRzZXQoIjYxIixjKCJ2PDxBIiwiPDx2QSIpKQ0KZDJuJHNldCgiNjQiLCI8PEEiKQ0KZDJuJHNldCgiNjciLGMoIl48PEEiLCI8PF5BIikpDQpkMm4kc2V0KCI2OCIsYygiXjxBIiwiPF5BIikpDQpkMm4kc2V0KCI2QSIsInZ2QSIpDQpkMm4kc2V0KCI3MSIsInZ2QSIpDQpkMm4kc2V0KCI3NSIsYygidj5BIiwiPnZBIikpDQpkMm4kc2V0KCI3OSIsIj4+QSIpDQpkMm4kc2V0KCI4MCIsInZ2dkEiKQ0KZDJuJHNldCgiODkiLCI+QSIpDQpkMm4kc2V0KCI4QSIsYygidnZ2PkEiLCI+dnZ2QSIpKQ0KZDJuJHNldCgiOTQiLGMoIjw8dkEiLCJ2PDxBIikpDQpkMm4kc2V0KCI5NiIsInZBIikNCmQybiRzZXQoIjk4IiwiPEEiKQ0KZDJuJHNldCgiOUEiLCJ2dnZBIikNCmQybiRzZXQoIkEwIixjKCI8QSIpKQ0KZDJuJHNldCgiQTEiLCJePDxBIikNCmQybiRzZXQoIkEzIiwiXkEiKQ0KZDJuJHNldCgiQTIiLGMoIl48QSIsIjxeQSIpKQ0KZDJuJHNldCgiQTQiLCJeXjw8QSIpDQpkMm4kc2V0KCJBNiIsIl5eQSIpDQpkMm4kc2V0KCJBOCIsYygiXl5ePEEiLCI8Xl5eQSIpKQ0KZDJuJHNldCgiQTkiLCJeXl5BIikNCmBgYA0KDQoNCkZpcnN0LCBmaW5kIGFsbCB0aGUgcG9zc2libGUgcGF0aHMgZm9yIHRoZSBkZXByZXNzdXJpemVkIHJvYm90IC0gYmVjYXVzZSBhbGwgb2YgdGhlc2UgYXJlIHRoZSBzYW1lIGxlbmd0aCwgdGhpcyBzaG91bGQganVzdCBncmFiIHRoZSBpbmZvDQoNCmBgYHtyfQ0Kbm9wcmVzc3VyZTwtZnVuY3Rpb24obnVtYmVycGFkLGNvZGUpew0KICAjaW5pdGlhbGl6ZSB0aGUgY29kZSB3aXRoICJBIg0KICBjb2RlPC1zdHJfYygiQSIsY29kZSkNCiAgcTwtcXVldWUoKQ0KICBvdXQ8LWMoKQ0KICBxJHB1c2goYyhjb2RlLCIiKSkNCiAgd2hpbGUocSRzaXplKCk+MCl7DQogICAgY2RlPC1xJHBvcCgpDQogICAgIyMjIyBpZiBubyBtb3JlIGNoYXJhY3RlcnMsIGVudGVyIHRoZSBkaXJlY3Rpb25hbCBrZXlwYWQgc2VxdWVuY2UgaW50byBvdXQNCiAgICBpZihuY2hhcihjZGVbMV0pPT0xKXsNCiAgICAgIG91dDwtYyhvdXQsY2RlWzJdKQ0KICAgICAgbmV4dH0NCiAgICAjIyMgb3RoZXJ3aXNlLCB1c2UgdGhlIGRpY3Rpb25hcnkgdG8gZmluZCBzZXF1ZW5jZXMNCiAgICB4PC1udW1iZXJwYWQkZ2V0KHN0cl9zdWIoY2RlWzFdLGVuZD0yKSkNCiAgICAjIyMgZm9yIGVhY2ggcG9zc2libGUgcGF0aCBpbiB0aGUgZGljdGlvbmFyeSwNCiAgICAjIyMgcHVzaCB0aGUgY29kZSB3aXRob3V0IHRoZSBmaXJzdCBjaGFyYWN0ZXIgYW5kIGFkZCB0aGUgbW92ZXMgdG8gdGhlIGVuZCBvZiB0aGUgc2VxdWVuY2Ugb2YgbW92ZXMgDQogICAgZm9yKGkgaW4gMTpsZW5ndGgoeCkpew0KICAgICAgcSRwdXNoKGMoc3RyX3N1YihjZGVbMV0sc3RhcnQ9Miksc3RyX2MoY2RlWzJdLHhbaV0pKSl9fQ0Kb3V0fQ0KDQoNCmBgYA0KDQoNCg0KYGBge3J9DQpyMTwtbm9wcmVzc3VyZShkMm4sIjAyOUEiKQ0KcjENCmBgYA0KVGhlbiBmaW5kIHRoZSBwYXRoIGZvciB0aGUgcmFkaWF0aW9uIHJvYm90cw0KDQpgYGB7cn0NCnJhZGlhdGlvbjwtZnVuY3Rpb24oZHBhZCxjb2Rlcyl7DQogIHE8LXF1ZXVlKCkNCiAgIyMjIyBzbWFsbGVzdCBsZW5ndGgNCiAgc2hvcnRlc3Q8LUluZg0KICBzbWFsbGVzdDwtbGlzdCgpDQogIGZvcihpIGluIDE6bGVuZ3RoKGNvZGVzKSl7DQogICAgeDwtY29kZXNbaV0NCiAgICAjIyMgcHVzaGluZyB0aGUgY3VycmVudCwgdGhlIG91dHB1dCwgYW5kIHRoZSBzdGFydGluZw0KICAgIHEkcHVzaChjKHN0cl9jKCJBIix4KSwiIix4KSl9DQogICAgd2hpbGUocSRzaXplKCk+MCl7DQogICAgICBjZGU8LXEkcG9wKCkNCiAgICAgICMjIyBjaGVjayB0byBzZWUgaWYgdGhpcyBoYXMgd29ya2VkIGl0cyB3YXkgdGhyb3VnaCB0aGUgc2VxdWVuY2UNCiAgICAgIGlmKG5jaGFyKGNkZVsxXSk9PTEpew0KICAgICAgICAjIyMgaWYgdGhpcyBpcyB0aGUgc2hvcnRlc3QsIHVwZGF0ZSBldmVyeXRoaW5nDQogICAgICAgIGlmKG5jaGFyKGNkZVsyXSk8c2hvcnRlc3Qpew0KICAgICAgICAgIHNob3J0ZXN0PC1uY2hhcihjZGVbMl0pDQogICAgICAgICAgc21hbGxlc3Q8LWxpc3QoY2RlWzI6M10pDQogICAgICAgICAgIyMjIGlmIGl0IGlzIHRoZSBzYW1lIGxlbmd0aCBhcyB0aGUgc2hvcnRlc3QgLSBrZWVwIGl0DQogICAgICAgIH1lbHNlIGlmKG5jaGFyKGNkZVsyXSk9PXNob3J0ZXN0KXsNCiAgICAgICAgICBzbWFsbGVzdDwtYyhzbWFsbGVzdCxsaXN0KGNkZVsyOjNdKSl9DQogICAgICAgIG5leHR9DQogICAgICAjIyMjIG90aGVyd2lzZSwgc3RhcnQgY29uc3RydWN0aW5nIHRoZSANCiAgICAgIHg8LWRwYWQkZ2V0KHN0cl9zdWIoY2RlWzFdLGVuZD0yKSkNCiAgICAgICMjIyBmb3IgZWFjaCBwb3NzaWJsZSBwYXRoIGluIHRoZSBkaWN0aW9uYXJ5LA0KICAgICAgIyMjIHB1c2ggdGhlIGNvZGUgd2l0aG91dCB0aGUgZmlyc3QgY2hhcmFjdGVyIGFuZCBhZGQgdGhlIG1vdmVzIHRvIHRoZSBlbmQgb2YgdGhlIHNlcXVlbmNlIG9mIG1vdmVzIA0KICAgICAgZm9yKGkgaW4gMTpsZW5ndGgoeCkpew0KICAgICAgICBxJHB1c2goYyhzdHJfc3ViKGNkZVsxXSxzdGFydD0yKSxzdHJfYyhjZGVbMl0seFtpXSksY2RlWzNdKSl9fSAgICAgDQogICAgc21hbGxlc3R9DQpgYGANCg0KDQpgYGB7cn0NCnIyPC1yYWRpYXRpb24oZDJkLHIxKQ0KYGBgDQpUaGVuIGZpbmQgdGhlIHBhdGhzIGZvciB0aGUgZnJvemVuIHJvYm90cyAoVGhlIGFzc3VtcHRpb24gaXMgdGhhdCB0aGUgc2hvcnRlciB0aGUgcGF0aCBlYXJsaWVyLCB0aGUgc2hvcnRlciB0aGUgcGF0aCBsYXRlcikNCg0KYGBge3J9DQpmcm96ZW48LWZ1bmN0aW9uKGRwYWQsY29kZXMpew0KICBwcTwtcHJpb3JpdHlfcXVldWUoKQ0KICAjIyMjIHNtYWxsZXN0IGxlbmd0aA0KICBzaG9ydGVzdDwtSW5mDQogIHNtYWxsZXN0PC1saXN0KCkNCiAgZm9yKGkgaW4gMTpsZW5ndGgoY29kZXMpKXsNCiAgICB4PC1jb2Rlc1tbaV1dDQogICAgIyMjIHB1c2hpbmcgdGhlIGN1cnJlbnQsIHRoZSBvdXRwdXQsIGFuZCB0aGUgDQogICAgcHEkcHVzaChjKHN0cl9jKCJBIix4WzFdKSwiIix4WzE6Ml0pLC1uY2hhcih4WzFdKSl9DQogICAgd2hpbGUocHEkc2l6ZSgpPjApew0KICAgICAgY2RlPC1wcSRwb3AoKQ0KICAgICAgIyMjIGNoZWNrIHRvIHNlZSBpZiB0aGlzIGhhcyB3b3JrZWQgaXRzIHdheSB0aHJvdWdoIHRoZSBzZXF1ZW5jZQ0KICAgICAgaWYobmNoYXIoY2RlWzJdKT5zaG9ydGVzdCl7bmV4dH0NCiAgICAgIGlmKG5jaGFyKGNkZVsxXSk9PTEpew0KICAgICAgICAjIyMgaWYgdGhpcyBpcyB0aGUgc2hvcnRlc3QsIHVwZGF0ZSBldmVyeXRoaW5nDQogICAgICAgIGlmKG5jaGFyKGNkZVsyXSk8c2hvcnRlc3Qpew0KICAgICAgICAgIHNob3J0ZXN0PC1uY2hhcihjZGVbMl0pDQogICAgICAgICAgc21hbGxlc3Q8LWxpc3QoY2RlWy0xXSkNCiAgICAgICAgICAjIyMgaWYgaXQgaXMgdGhlIHNhbWUgbGVuZ3RoIGFzIHRoZSBzaG9ydGVzdCAtIGtlZXAgaXQNCiAgICAgICAgfWVsc2UgaWYobmNoYXIoY2RlWzJdKT09c2hvcnRlc3Qpew0KICAgICAgICAgIHNtYWxsZXN0PC1jKHNtYWxsZXN0LGxpc3QoY2RlWy0xXSkpfQ0KICAgICAgICBuZXh0fQ0KICAgICAgIyMjIyBvdGhlcndpc2UsIHN0YXJ0IGNvbnN0cnVjdGluZyB0aGUgDQogICAgICB4PC1kcGFkJGdldChzdHJfc3ViKGNkZVsxXSxlbmQ9MikpDQogICAgICAjIyMgZm9yIGVhY2ggcG9zc2libGUgcGF0aCBpbiB0aGUgZGljdGlvbmFyeSwNCiAgICAgICMjIyBwdXNoIHRoZSBjb2RlIHdpdGhvdXQgdGhlIGZpcnN0IGNoYXJhY3RlciBhbmQgYWRkIHRoZSBtb3ZlcyB0byB0aGUgZW5kIG9mIHRoZSBzZXF1ZW5jZSBvZiBtb3ZlcyANCiAgICAgIGZvcihpIGluIDE6bGVuZ3RoKHgpKXsNCiAgICAgICAgcHEkcHVzaChjKHN0cl9zdWIoY2RlWzFdLHN0YXJ0PTIpLHN0cl9jKGNkZVsyXSx4W2ldKSxjZGVbLWMoMToyKV0pLC0obmNoYXIoY2RlWzFdKStuY2hhcihjZGVbMl0pK25jaGFyKHhbaV0pKSl9fSAgICAgDQogICAgc2hvcnRlc3R9DQpgYGANCg0KDQpgYGB7cn0NCnIzPC1mcm96ZW4oZDJkLHIyKQ0KcjMNCmBgYA0KRm9yIHBhcnQgMSwgcnVuIHRocm91Z2ggZWFjaCBmdW5jdGlvbiBhbmQgdGhlbiBtdWx0aXBseSBieSB0aGUgbnVtZXJpY2FsIHZhbHVlcyBpbiB0aGUgaW5pdGlhbCBjb2RlLg0KDQpgYGB7cn0NCnBhcnQxPC1zYXBwbHkoYygiMDI5QSIsIjk4MEEiLCIxNzlBIiwiNDU2QSIsIjM3OUEiKSxmdW5jdGlvbih4KXsNCiAgcjE8LW5vcHJlc3N1cmUoZDJuLHgpDQogIHIyPC1yYWRpYXRpb24oZDJkLHIxKQ0KICByMzwtZnJvemVuKGQyZCxyMikNCiAgbnVtczwtYXMubnVtZXJpYyhzdHJfZmxhdHRlbih1bmxpc3Qoc3RyX2V4dHJhY3RfYWxsKHgsIls6ZGlnaXQ6XSIpKSkpDQogIGNwbHg8LXIzKm51bXMNCiAgY2F0KHgsIi0iLGxlbmd0aChyMSksIi0iLGxlbmd0aChyMiksIi0iLHIzLCItIixjcGx4LCJcbiIpDQogIGNwbHh9KQ0Kc3VtKHBhcnQxKQ0KYGBgDQoNCiMjIyBQYXJ0IDINCg0KT2J2aW91c2x5IHRoaXMgaXMgdG9vIG11Y2ggdG8gZG8gMjYgdGltZXMuICBTbyByZWN1cnNpdmVseQ0KDQoNCmBgYHtyfQ0KZmluZHNob3J0ZXN0PC1mdW5jdGlvbihsb25nY29kZSxkY3QscmVwKXsNCiAgIyMjI2lmIHRoZSBvbmx5IGNvZGUgaXMgIkEiIHJldHVybiAwIA0KICBpZihsb25nY29kZT09IkEiKXtyZXR1cm4oMCkNCiAgICAjIyMgaWYgdGhlcmUgYXJlIG9ubHkgdHdvIGNoYXJhY3RlcnMsIHJldHVybiB0aGUgbnVtYmVyIG9mIGtleXMgeW91IG5lZWQgdG8gcHJlc3MgdG8gZ2V0IGZyb20gdGhhdCBjaGFyYWN0ZXIgdG8gdGhlIG5leHQNCiAgfWVsc2UgaWYobmNoYXIobG9uZ2NvZGUpPT0yKXsNCiAgICByZXR1cm4obWVtZGJsKGxvbmdjb2RlLGRjdCxyZXApKQ0KICAgICMjIyBvdGhlcndpc2UsIHJldHVybiB0aGUgc3VtIG9mIHRoZSBmaXJzdCB0d28gY2hhcmFjdGVycyBhbmQgdGhlIG51bWJlciBvZiBrZXlzIHRvIHByZXNzIGZvciB0aGUgcmVtYWluZGVyIG9mIHRoZSBzdHJpbmcuIA0KICB9ZWxzZXsNCiAgICByZXR1cm4oc3VtKG1lbWRibChzdHJfc3ViKGxvbmdjb2RlLGVuZD0yKSxkY3QscmVwKSwNCiAgICAgICAgICAgICAgIGZpbmRzaG9ydGVzdChzdHJfc3ViKGxvbmdjb2RlLHN0YXJ0PTIpDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgLGRjdA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICxyZXApKSl9fQ0KDQpkYmxzaG9ydDwtZnVuY3Rpb24ocHIsZGN0LHJlcCl7DQogICMjIyBpZiB0aGlzIGlzIHRoZSBmaW5hbCByZXBlYXQsIHJldHVybiB0aGUgbnVtYmVyIG9mIGNoYXJhY3RlcnMgZm9yIHRoYXQga2V5IHNlcXVlbmNlDQogIGlmKHJlcD09MSl7DQogICAgcmV0dXJuKG1pbihuY2hhcihkY3QkZ2V0KHByKSkpKQ0KICB9ZWxzZXsNCiAgICAjIyMgb3RoZXJ3aXNlLCBnZXQgYWxsIG9mIHRoZSBvcHRpb25zIGZvciB0aGF0IGtleSBzZXF1ZW5jZQ0KICAgICMjIyBmb3IgZWFjaCBvZiB0aGVtLCBydW4gZmluZHNob3J0ZXN0KCkgd2l0aCBvbmUgZmV3ZXIgcmVwZWF0DQogICAgIyMjIHRha2UgdGhlIG1pbmltdW0uDQogICAgcmV0dXJuKG1pbihzYXBwbHkoZGN0JGdldChwciksZnVuY3Rpb24oeCl7ZmluZHNob3J0ZXN0KHN0cl9jKCJBIix4KSxkY3QscmVwLTEpfSkpKX19DQoNCiMjIyBtZW1vaXNlIGRibGVzaG9ydCAtIGJlY2F1c2Ugb3RoZXJ3aXNlIHRoaXMgdGFrZXMgdG9vIGxvbmcNCm1lbWRibDwtbWVtb2lzZShkYmxzaG9ydCkNCg0KYGBgDQoNCldpdGggdGhhdCBpbiBwbGFjZSwgdXNlIHRob3NlLCBwbHVzIHRoZSBub3ByZXNzdXJlKCkgZnJvbSBhYm92ZSAoZm9yIHRoZSBkaWdpdGFsIGtleXBhZCkgYW5kIG11bHRpcGx5IGl0IGJ5IHRoZSBudW1lcmljIHZhbHVlLg0KDQpgYGB7cn0NCmhvd2NvbXBsZXg8LWZ1bmN0aW9uKGNvZGUsbmRpY3QsZGRpY3QscmVwcyl7DQogICMjIyBmaXJzdCBmaW5kIGhvdyB0aGUgZGVwcmVzc3VyaXplZCByb2JvdCBuZWVkcyB0byBtb3ZlIGFuZCANCiAgcHJlc3N1cmVsZXNzPC1zdHJfYygiQSIsbm9wcmVzc3VyZShuZGljdCxjb2RlKSkNCiAgZmV3ZXN0cHJlc3NlczwtbWluKHNhcHBseShwcmVzc3VyZWxlc3MsZnVuY3Rpb24oeCl7ZmluZHNob3J0ZXN0KHgsZGRpY3QscmVwcyl9KSkNCiAgbnVtczwtYXMubnVtZXJpYyhzdHJfZmxhdHRlbih1bmxpc3Qoc3RyX2V4dHJhY3RfYWxsKGNvZGUsIls6ZGlnaXQ6XSIpKSkpDQogIGZld2VzdHByZXNzZXMqbnVtc30NCmBgYA0KDQoNCmBgYHtyfQ0KcDI8LXNhcHBseShjKCIwMjlBIiwiOTgwQSIsIjE3OUEiLCI0NTZBIiwiMzc5QSIpLGZ1bmN0aW9uKHgpe2hvd2NvbXBsZXgoeCxkMm4sZDJkLDI1KX0pDQpwYXJ0Mjwtc3VtKHAyKQ0KcGFydDINCmBgYA0KDQo=</div>
 
 
 
@@ -2040,7 +2115,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Day20.Rmd");
+  window.initializeSourceEmbed("Day21.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
